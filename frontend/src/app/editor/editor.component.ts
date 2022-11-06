@@ -29,7 +29,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
   }
 
-  uploadCode() {
+  uploadCode() { // TODO
     if (Object.entries(this.aceEditor).length !== 0) {
       console.log(this.aceEditor.getValue());
     }
