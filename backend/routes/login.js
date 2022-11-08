@@ -2,23 +2,21 @@ const express = require('express')
 const neo4j = require('neo4j-driver')
 const path = require('path')
 const jwt = require('jsonwebtoken');
+const router = express.Router()
 
 const driver = neo4j.driver('bolt://localhost:7474/', neo4j.auth.basic('neo4j', 's3cr3t'))
 const session = driver.session()
-const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
 
-// http://localhost:3000/ 
-// TO LOGIN
-app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname + '/login.html'));
+// GET LOGIN PAGE
+router.get('/', function (req, res) {
+	res.sendFile(path.join(__dirname + '/login.html')); // TO DO: get actual login page
 });
 
-// http://localhost:3000/auth
-// POST OF LOGIN
-app.post('/auth', function (req, res) {
+// POST LOGIN PAGE
+router.post('/', function (req, res) {
 	let email = req.body.email 
 	let password = req.body.password
 	if (email && password) {
@@ -30,7 +28,7 @@ app.post('/auth', function (req, res) {
 			  LIMIT 1`
 		)
 		.then(res.redirect('/home')
-			//req.session.loggedin = true // TO DO: fix loggedin
+			//req.session.loggedin = true // TO DO: fix loggedin and redirect to the correct page
 		)
 		.catch(
 			function(){ res.send('Error') }
@@ -39,40 +37,13 @@ app.post('/auth', function (req, res) {
 	else{es.send('Incorrect Username and/or Password!')}
 });
 
-app.get('/home', function(req,res){
+/*
+router.get('/home', function(req,res){
 	if(true)//(req.session.loggedin) // TO DO: fix loggedin
 		res.send('<h1>Beautiful Home!</h1>')
 	else
 		res.redirect('/')
 });
+*/
 
-app.get('/register', function (req,res){
-	res.sendFile(path.join(__dirname + '/login.html'));
-});
-
-// http://localhost:3000/register
-// POST OF REGISTER
-app.post('/register', function (req, res) {
-	let email = req.body.email 
-	let password =  req.body.password 
-	let name = req.body.name 
-	if (email && password) {
-		session
-		.run(
-			  'CREATE (n:Person {nome:{nameParam}, email:{emailParam}, password:{passwordParam}} return n', {nameParam:name, emailParam:email, passwordParam:password}
-			)
-		.then(
-			res.redirect('/home')	
-		)
-		.catch(
-			function(){ res.send('Error') }
-		)
-	}
-	else{
-			res.send('An error occurred')
-		}
-		res.end()
-	
-});
-
-app.listen(3000);
+module.exports = router
