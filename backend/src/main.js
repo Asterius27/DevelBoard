@@ -1,6 +1,6 @@
 //https://neo4j.com/developer/js-movie-app/
 const express = require('express');
-import Neode from 'neode';
+const Neode = require('neode');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
