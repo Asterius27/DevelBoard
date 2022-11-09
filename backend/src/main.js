@@ -2,6 +2,10 @@
 const express = require('express');
 import Neode from 'neode';
 const jwt = require('jsonwebtoken');
+require('dotenv').config()
+
+
+const port = process.env.PORT;
 
 //const instance = new Neode('bolt://localhost:7687', 'username', 'password');
 
@@ -9,7 +13,9 @@ const login = require('./routes/login')
 const register = require('./routes/register')
 const app = express();
 
-const port = 3000; //to change with env variable
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+
 
 app.use('/login', login)
 app.use('/register', register)

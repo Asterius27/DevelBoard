@@ -1,14 +1,22 @@
-const express = require('express')
+const express = require('express');
 const neo4j = require('neo4j-driver')
-const path = require('path')
+const path = require('path');
 const jwt = require('jsonwebtoken');
-const router = express.Router()
+const router = express.Router();
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const driver = neo4j.driver('bolt://localhost:7474/', neo4j.auth.basic('neo4j', 's3cr3t'))
 const session = driver.session()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
+
+function generateAccessToken(username) {
+	return jwt.sign(username, process.env.TOKEN, { expiresIn: '1800s' });
+  }
+  
 
 // GET LOGIN PAGE
 router.get('/', function (req, res) {
