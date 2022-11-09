@@ -1,0 +1,68 @@
+{
+    "login" :{
+        "request": [
+            "email",
+            "password"
+        ],
+
+        "response": [
+            "token"
+        ]
+    },
+
+    "signup":{
+        "request":[
+            "name",
+            "surname",
+            "username",
+            "email",
+            "password"
+        ]   
+    },
+
+    "requestChallenge/id":{
+        "request":[
+            "challengeId"
+        ],
+        "response":[
+            "description",
+            "language"
+        ]
+    },
+    "requestChallenge/filter":{
+        "request":[
+            "filter"
+        ],
+        "response":[
+            "challengeIdList"
+        ]
+    },
+    "sendCode":{
+        "request":[
+            "code",
+            "language"
+        ],
+        "response":[
+            "evaluation/output"
+        ]
+    },
+    "leaderboard":{
+        "request":[
+            "challengeId"
+        ],
+        "response":[
+            "userLeaderboard"
+        ]
+    },
+    "createChallenge":{
+        "request":[
+            "description",
+            "language",
+            "testCases",
+            "expireDate"
+        ],
+        "response":[
+        ]
+    }
+
+}
