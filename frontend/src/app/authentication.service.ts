@@ -15,7 +15,7 @@ export class AuthenticationService {
 
   public login(username: string, password: string): Observable<string> {
     return this.http.post(
-      environment.apiUrl + '/user/login',
+      environment.apiUrl + '/user/login', // TODO change it
       {
         username: username,
         password: password,
@@ -30,7 +30,7 @@ export class AuthenticationService {
 
   public register(username: string, email: string, password: string): Observable<string> {
     return this.http.post(
-      environment.apiUrl + '/user/register',
+      environment.apiUrl + '/user/register', // TODO change it
       {
         username: username,
         email: email,
