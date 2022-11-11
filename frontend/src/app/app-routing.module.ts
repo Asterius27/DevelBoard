@@ -6,11 +6,12 @@ import { HomeComponent } from './home/home.component';
 import { LeaderboardsComponent } from './leaderboards/leaderboards.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SignupComponent } from './signup/signup.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'signup', component: LoginComponent},
+  {path: 'signup', component: SignupComponent},
   {path: 'home', component: HomeComponent},
   {path: 'editor', component: EditorComponent},
   {path: 'profile', component: ProfileComponent},
