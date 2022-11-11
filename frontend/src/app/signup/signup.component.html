@@ -3,15 +3,19 @@
   fxLayout="column"
   fxLayoutAlign="center">
   <mat-card class="authentication-card">
-    <mat-card-header><mat-card-title>Login</mat-card-title></mat-card-header>
+    <mat-card-header><mat-card-title>Register</mat-card-title></mat-card-header>
     <mat-card-content>
       <form
-        [formGroup]="loginForm"
+        [formGroup]="registerForm"
         fxLayout="column"
         fxLayoutAlign="center stretch">
         <mat-form-field>
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Password</mat-label>
@@ -21,10 +25,10 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="onSubmit()">
-        Login
+        Register
       </button>
-      <button mat-button routerLink="/signup" routerLinkActive="active">
-        Don't have an account? Register here.
+      <button mat-button routerLink="/login" routerLinkActive="active">
+        Already have an account? Login here.
       </button>
     </mat-card-actions>
   </mat-card>

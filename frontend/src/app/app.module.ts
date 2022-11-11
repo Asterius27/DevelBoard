@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatInputModule } from '@angular/material/input';
     LeaderboardsComponent,
     EditProfileComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
