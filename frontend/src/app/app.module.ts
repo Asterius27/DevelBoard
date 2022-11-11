@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +19,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { SignupComponent } from './signup/signup.component';
+import { TokenInterceptor } from './token.interceptor';
+import { AuthenticationService } from './authentication.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,10 @@ import { SignupComponent } from './signup/signup.component';
     MatCardModule,
     MatInputModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    {provide: AuthenticationService, useClass: AuthenticationService}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
