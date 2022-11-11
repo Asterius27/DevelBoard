@@ -21,6 +21,8 @@ import { MatInputModule } from '@angular/material/input';
 import { SignupComponent } from './signup/signup.component';
 import { TokenInterceptor } from './token.interceptor';
 import { AuthenticationService } from './authentication.service';
+import { ChallengesService } from './challenges.service';
+import { LeaderboardsService } from './leaderboards.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { AuthenticationService } from './authentication.service';
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
-    {provide: AuthenticationService, useClass: AuthenticationService}
+    {provide: AuthenticationService, useClass: AuthenticationService},
+    {provide: ChallengesService, useClass: ChallengesService},
+    {provide: LeaderboardsService, useClass: LeaderboardsService}
   ],
   bootstrap: [AppComponent]
 })

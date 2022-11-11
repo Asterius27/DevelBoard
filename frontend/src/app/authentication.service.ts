@@ -13,7 +13,7 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  public login(username: string, password: string): Observable<string> {
+  public login(username: string, password: string): Observable<any> {
     return this.http.post(
       environment.apiUrl + '/user/login', // TODO change it
       {
@@ -28,7 +28,7 @@ export class AuthenticationService {
     ));
   }
 
-  public register(username: string, email: string, password: string): Observable<string> {
+  public register(username: string, email: string, password: string): Observable<any> {
     return this.http.post(
       environment.apiUrl + '/user/register', // TODO change it
       {
