@@ -15,19 +15,37 @@ app.use(express.json())
 
 function generateAccessToken(username) {
 	return jwt.sign(username, process.env.TOKEN, { expiresIn: '1800s' });
-  }
-  
+}
+
+passport.use(new passportHTTP.BasicStrategy(
+	function(email, password, done) {
+	  user.getModel().findOne({email: email}, (err, user) => { // TO DO: change user.getModel() in the OGM way
+		if (err) {
+		  return done({statusCode: 500, error: true, errormessage:err});
+		}
+		if (!user) {
+		  return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"});
+		}
+		if (user.validatePassword(password)) {
+		  return done(null, user);
+		}
+		return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"});
+	  })
+	}
+));
 
 // GET LOGIN PAGE
 router.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname + '/login.html')); // TO DO: get actual login page
+	return res.status(200)
 });
 
 // POST LOGIN PAGE
-router.post('/', function (req, res) {
-	let email = req.body.email 
-	let password = req.body.password
-	if (email && password) {
+router.post('/',  passport.authenticate('basic', {session: false}), function (req, res) {
+	let user = {
+		email: req.body.email, 
+		password: req.body.password
+	}
+	if (user.email && user.password) {
 		session
 		.run(
 			  `MATCH (p:Person)
@@ -35,23 +53,14 @@ router.post('/', function (req, res) {
 			  RETURN p.name AS name
 			  LIMIT 1`
 		)
-		.then(res.redirect('/home')
-			//req.session.loggedin = true // TO DO: fix loggedin and redirect to the correct page
+		let token_signed = generateAccessToken(user.email)
+		.then(res.sendStatus(200).json({error: false, errormessage: "", token: token_signed, temporary: req.user.temporary})
 		)
 		.catch(
-			function(){ res.send('Error') }
+			(err) => {return next({statusCode: 404, error: true, errormessage: "DB Error: " + err})}
 		)
 	}
-	else{es.send('Incorrect Username and/or Password!')}
+	else{return next({statusCode: 404, error: true, errormessage: "Incorrect username and/or password"})}
 });
-
-/*
-router.get('/home', function(req,res){
-	if(true)//(req.session.loggedin) // TO DO: fix loggedin
-		res.send('<h1>Beautiful Home!</h1>')
-	else
-		res.redirect('/')
-});
-*/
 
 module.exports = router
