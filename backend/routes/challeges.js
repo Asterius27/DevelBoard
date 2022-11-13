@@ -10,7 +10,10 @@ router.use(express.json());
 router.use(authenticateToken)
 
 router.post('/' ,(req, resp) => {
-    req.body
+
+    instance.create('Quiz',{
+        
+    })
 })
 
 module.exports = router

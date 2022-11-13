@@ -10,5 +10,8 @@ module.exports = {
     },
     path: {
         type: "string"
+    },
+    expireDate: {
+        type: "dateTime"
     }
 }

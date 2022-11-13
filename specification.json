@@ -59,7 +59,13 @@
             "description",
             "language",
             "testCases",
-            "expireDate"
+            "expireDate": [
+                "year",
+                "month",
+                "day",
+                "hour",
+                "minute"
+            ]
         ],
         "response":[
         ]
