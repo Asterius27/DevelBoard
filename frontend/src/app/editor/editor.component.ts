@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import * as ace from "ace-builds";
+import { ChallengesService } from '../challenges.service';
 
 @Component({
   selector: 'app-editor',
@@ -11,7 +12,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild("editor") private editor: ElementRef<HTMLElement> = {} as ElementRef;
   private aceEditor = {} as ace.Ace.Editor;
 
-  constructor() {}
+  constructor(private c: ChallengesService) {}
 
   ngOnInit(): void {}
 
@@ -27,11 +28,25 @@ export class EditorComponent implements OnInit, AfterViewInit {
       enableSnippets: true,
       enableLiveAutocompletion: false
     });
+    this.load_challenge();
   }
 
-  uploadCode() { // TODO
+  load_challenge() {
+    this.c.getChallenge("id").subscribe({ // TODO change id
+      next: (data) => {
+        // TODO load the challenge
+      }
+    });
+  }
+
+  uploadCode() {
     if (Object.entries(this.aceEditor).length !== 0) {
       console.log(this.aceEditor.getValue());
+      this.c.submitCode(this.aceEditor.getValue(), "java").subscribe({ // TODO add language variable
+        next: (data) => {
+          // TODO show evaluation/output
+        }
+      });
     }
   }
 

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "connect-ensure-login": "^0.1.1"
+  }
+}

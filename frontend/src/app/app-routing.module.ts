@@ -4,15 +4,20 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { EditorComponent } from './editor/editor.component';
 import { HomeComponent } from './home/home.component';
 import { LeaderboardsComponent } from './leaderboards/leaderboards.component';
+import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SignupComponent } from './signup/signup.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/home', pathMatch: 'full'}, // TODO modify it
-  {path: 'home', component: HomeComponent},
-  {path: 'editor', component: EditorComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'leaderboards', component: LeaderboardsComponent},
-  {path: 'editprofile', component: EditProfileComponent}
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent},
+  {path: 'signup', component: SignupComponent},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'editor', component: EditorComponent, canActivate: [AuthGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+  {path: 'leaderboards', component: LeaderboardsComponent, canActivate: [AuthGuard]},
+  {path: 'editprofile', component: EditProfileComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
