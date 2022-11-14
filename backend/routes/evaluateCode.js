@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const { exec } = require("child_process");
+const auth = require('../utils/auth');
+
+router.use(auth.authenticateToken);
 
 router.post('/', (req, res, next) => {
     // TODO get test cases from db

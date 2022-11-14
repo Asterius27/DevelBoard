@@ -1,27 +1,24 @@
 const express = require('express');
 const router = express.Router();
-import { drivers } from '../src/main';
-import authenticateToken from '../utils/auth';
-import { executeQuery } from '../utils/database';
+const auth = require('../utils/auth');
+const db = require('./utils/database');
 
-router.use(express.json());
+router.use(auth.authenticateToken);
 
-router.use(authenticateToken);
-
-router.post('/' ,(req, resp) => {
+router.post('/', (req, res) => {
 
     let date=''+req.body.expireDate.year+'-'+req.body.expireDate.month+'-'+req.body.expireDate.day+'T'+req.expireDate.hour+
     ':'+req.expireDate.minute+':00.000';
 
     let title=req.body.title;
 
-    let challege={
+    let challenge={
         description: req.body.description,
         language: req.body.language,
         testCases: req.body.testCases
     };
 
-    let jsonData=JSON.stringify(challege);
+    let jsonData=JSON.stringify(challenge);
 
     var fs = require('fs');
 
@@ -31,24 +28,24 @@ router.post('/' ,(req, resp) => {
         }
     });
 
-    executeQuery('CREATE (node:Challenge {title: $title, expireDate: localdatetime($date)} RETURN node',
+    db.executeQuery('CREATE (node:Challenge {title: $title, expireDate: localdatetime($date)} RETURN node',
     {title: title, date: date},
     function (result){
         console.log(result.records[0].get('title'));
-        resp.sendStatus(200);
+        res.sendStatus(200);
     });
 
 });
 
-router.get('/',(req, resp) => {
-    executeQuery('MATCH (node:Challenge) RETURN node.title, node.expireDate', null, 
+router.get('/',(req, res) => {
+    db.executeQuery('MATCH (node:Challenge) RETURN node.title, node.expireDate', null, 
     function (result){
         challenges=new Array;
         for (chall in result.records){
             challenges.push({title: chall.get('title'), expireDate: chall.get('expireDate')}); //rivedi la data così non va
         }
 
-        resp.sendStatus(200).json(challenges)
+        res.sendStatus(200).json(challenges)
     });
 });
 

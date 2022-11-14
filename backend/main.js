@@ -2,7 +2,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const db = require('./utils/database')
+const db = require('./utils/database');
 
 const port = process.env.PORT;
 

@@ -10,6 +10,7 @@ function connectTo(){
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
     );
     session = driver.session();
+    // console.log("connected!");
 }
 
 async function executeQuery(query, params, fun){
