@@ -9,11 +9,11 @@ function connectTo(){
         'bolt://localhost:7474/',
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
     );
-    session = driver.session();
     // console.log("connected!");
 }
 
 async function executeQuery(query, params, fun){
+    session= driver.session()
     if (session) {
         session.run(query, params).subscribe({
             onNext: fun,
