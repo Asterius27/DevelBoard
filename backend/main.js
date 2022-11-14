@@ -12,7 +12,7 @@ const evaluateCode = require('./routes/evaluateCode')
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json())
+app.use(express.json());
 
 
 app.use('/login', login)
@@ -21,5 +21,5 @@ app.use('/evaluate', evaluateCode)
 
 app.listen(port, () => {
     console.log('app listening on port '+port);
-    db.connectTo()
+    db.connectTo();
 });
