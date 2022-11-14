@@ -5,8 +5,8 @@ const router = express.Router()
 
 const driver = neo4j.driver('bolt://localhost:7474/', neo4j.auth.basic('neo4j', 's3cr3t'))
 const session = driver.session()
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json())
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json())
 
 // GET REGISTER PAGE
 router.get('/', function (req,res){

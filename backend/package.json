@@ -9,13 +9,15 @@
     "jsonwebtoken": "^8.5.1",
     "neo4j-driver": "^5.2.0",
     "neode": "^0.4.8",
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "passport-http": "^0.3.0"
   },
   "name": "backend",
   "version": "1.0.0",
   "main": "test.js",
   "scripts": {
-    "start": "nodemon login.js"
+    "start": "node main.js",
+    "nodemon": "nodemon login.js"
   },
   "author": "",
   "license": "ISC",
