@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     // TODO logout
+    // TODO lock create challenge (it's only for admin)
     this.router.navigate(['/']);
   }
 

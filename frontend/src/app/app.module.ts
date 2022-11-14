@@ -23,6 +23,7 @@ import { TokenInterceptor } from './token.interceptor';
 import { AuthenticationService } from './authentication.service';
 import { ChallengesService } from './challenges.service';
 import { LeaderboardsService } from './leaderboards.service';
+import { CreateChallengeComponent } from './create-challenge/create-challenge.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { LeaderboardsService } from './leaderboards.service';
     EditProfileComponent,
     HomeComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    CreateChallengeComponent
   ],
   imports: [
     BrowserModule,
