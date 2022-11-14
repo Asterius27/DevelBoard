@@ -4,6 +4,8 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const dotenv = require('dotenv');
+const passport = require('passport');
+const passportHTTP = require('passport-http');
 
 dotenv.config();
 
