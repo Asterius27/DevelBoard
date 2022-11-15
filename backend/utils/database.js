@@ -6,24 +6,19 @@ let session = {};
 
 function connectTo(){
     driver = neo4j.driver(
-        'bolt://localhost:7474/',
+        'bolt://localhost:7687/',
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
     );
     // console.log("connected!");
 }
 
-async function executeQuery(query, params, fun){
-    session= driver.session()
+async function executeQuery(query, params, fun, errFun){
+    session= driver.session();
     if (session) {
-        session.run(query, params).subscribe({
-            onNext: fun,
-            onCompleted: () => {
-                session.close()
-            },
-            onError: error => {
-                console.log(error)
-              }
-        });
+        await session.run(query, params)
+        .then(fun)
+        .catch(errFun)
+        .then(() => session.close());
     }
 
 }

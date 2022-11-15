@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../utils/auth');
-const db = require('./utils/database');
+const db = require('../utils/database');
 
-router.use(auth.authenticateToken);
+//router.use(auth.authenticateToken);
 
 router.post('/', (req, res) => {
 
-    let date=''+req.body.expireDate.year+'-'+req.body.expireDate.month+'-'+req.body.expireDate.day+'T'+req.expireDate.hour+
-    ':'+req.expireDate.minute+':00.000';
+    let date=''+req.body.expireDate.year+'-'+req.body.expireDate.month+'-'+req.body.expireDate.day+'T'+req.body.expireDate.hour+
+    ':'+req.body.expireDate.minute+':00.000';
 
     let title=req.body.title;
 
@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
         testCases: req.body.testCases
     };
 
-    let jsonData=JSON.stringify(challenge);
+    /*let jsonData=JSON.stringify(challenge);
 
     var fs = require('fs');
 
@@ -26,28 +26,68 @@ router.post('/', (req, res) => {
         if (err) {
             console.log(err);
         }
-    });
+    });*/
 
-    db.executeQuery('CREATE (node:Challenge {title: $title, expireDate: localdatetime($date)} RETURN node',
-    {title: title, date: date},
-    function (result){
-        console.log(result.records[0].get('title'));
-        res.sendStatus(200);
-    });
+    db.executeQuery(
+        'CREATE (node:Challenge {title: $title, expireDate: localdatetime($date), description: $description, language: $language, testCases: $testCases}) RETURN node',
+        {title: title, date: date, description: req.body.description, language: req.body.language, testCases: req.body.testCases},
+        result => {
+            console.log(result.records);
+            res.sendStatus(200);
+        },
+        error => {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    );
 
 });
 
 router.get('/',(req, res) => {
-    db.executeQuery('MATCH (node:Challenge) RETURN node.title, node.expireDate', null, 
-    function (result){
-        challenges=new Array;
-        for (chall in result.records){
-            challenges.push({title: chall.get('title'), expireDate: chall.get('expireDate')}); //rivedi la data così non va
+    db.executeQuery('MATCH (node:Challenge) RETURN node.title as title , node.expireDate as expireDate',
+        null, 
+        result => {
+            let challenges=new Array;
+            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: chall.get('expireDate')})); //rivedi la data così non va
+            res.status(200).json(challenges);
+        },
+        error => {
+            console.log(error);
+            res.sendStatus(500);
         }
-
-        res.sendStatus(200).json(challenges)
-    });
+    );
 });
 
+router.get('/:title',(req, res) => {
+    console.log("hey")
+    db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.title as title , node.expireDate as expireDate',
+        {title: req.params.title}, 
+        result => {
+            let challenge;
+            result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": chall.get("expireDate")}); //rivedi la data così non va
+            res.status(200).json(challenge);
+        },
+        error => {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    );
+});
+
+router.post('/prova', (req, res) => {
+
+    db.executeQuery(
+        'Match (node:Challenge {title: $title}) RETURN node.title as title',
+        {title: req.body.title},
+        result => {
+            result.records.forEach(r => console.log(r.get('title')));
+            res.sendStatus(200);
+        },
+        error => {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    );
+});
 
 module.exports = router
