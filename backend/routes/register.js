@@ -1,10 +1,7 @@
 const express = require('express')
-const neo4j = require('neo4j-driver')
-const path = require('path')
 const router = express.Router()
+const db = require('../utils/database');
 
-const driver = neo4j.driver('bolt://localhost:7474/', neo4j.auth.basic('neo4j', 's3cr3t'))
-const session = driver.session()
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json())
 
@@ -24,17 +21,15 @@ router.post('/', function (req, res) {
 		surname: req.body.surname
 	} 
 	if (user.email && user.password && user.name && user.username && user.surname) {
-		session
-		.run(
-			  'CREATE (n:Person {nome:{nameParam}, email:{emailParam}, password:{passwordParam}, username:{usernameParam}, surname:{surnameParam}} return n', {nameParam:user.name, emailParam:user.email, passwordParam:user.password, usernameParam:user.username, surnameParam:user.surname}
-			)
-		.then(res.sendStatus(200).json({error: false, errormessage: ""})
-		)
-		.catch(
-			(err) => {return next({statusCode: 404, error: true, errormessage: "DB Error: " + err})}
+		db.executeQuery('CREATE (n:Person {nome:$name, email:$email, password:$password, username:$username, surname:$surname} return n', 
+		{email: user.email, password: user.password, name:user.name, username:user.username, surname:user.surname},
+		result => {
+			res.sendStatus(200).json(result)
+		},
+		error => {return next({statusCode: 404, error: true, errormessage: "DB Error: " + error})}
 		)
 	}
-	else{return next({statusCode: 404, error: true, errormessage: "Missing information!"})}
+	else{return next({statusCode: 404, error: true, errormessage: "Missing or Wrong information!"})}
 });
 
 module.exports = router

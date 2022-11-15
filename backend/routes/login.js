@@ -1,16 +1,13 @@
 const express = require('express');
-const neo4j = require('neo4j-driver')
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const dotenv = require('dotenv');
 const passport = require('passport');
 const passportHTTP = require('passport-http');
+const db = require('../utils/database');
 
 dotenv.config();
 
-const driver = neo4j.driver('bolt://localhost:7474/', neo4j.auth.basic('neo4j', 's3cr3t'))
-const session = driver.session()
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json())
 
@@ -21,20 +18,19 @@ function generateAccessToken(username) {
 
 passport.use(new passportHTTP.BasicStrategy(
 	function(email, password, done) {
-	  user.getModel().findOne({email: email}, (err, user) => { // TO DO: change user.getModel() in the OGM way
-		if (err) {
-		  return done({statusCode: 500, error: true, errormessage:err});
-		}
-		if (!user) {
-		  return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"});
-		}
-		if (user.validatePassword(password)) {
-		  return done(null, user);
-		}
+		db.executeQuery(`MATCH (node:Person) {email = $email AND password = $password} RETURN node.email`,{email: email, password: password}, 
+		result => {
+			res.sendStatus(200).json({error: false, errormessage: "", token: generateAccessToken(result), temporary: req.user.temporary})
+		},
+		error => {res.sendStatus(404).json({error: true, errormessage: "DB Error: " + error})} 
+		), (err, user) => { 
+		if (err) { return done({statusCode: 500, error: true, errormessage:err});}
+		if (!user) { return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"});}
+		if (user.validatePassword(password)) { return done(null, user);}
 		return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"});
-	  })
-	}
-));
+	  }
+}));
+
 
 // GET LOGIN PAGE
 router.get('/', function (req, res) {
@@ -48,18 +44,11 @@ router.post('/',  passport.authenticate('basic', {session: false}), function (re
 		password: req.body.password
 	}
 	if (user.email && user.password) {
-		session
-		.run(
-			  `MATCH (p:Person)
-			  WHERE p.name = email AND p.password = password
-			  RETURN p.name AS name
-			  LIMIT 1`
-		)
-		let token_signed = generateAccessToken(user.email)
-		.then(res.sendStatus(200).json({error: false, errormessage: "", token: token_signed, temporary: req.user.temporary})
-		)
-		.catch(
-			(err) => {return next({statusCode: 404, error: true, errormessage: "DB Error: " + err})}
+		db.executeQuery(`MATCH (node:Person) {email = $email AND password = $password} RETURN node.email`,{email: user.email, password: user.password}, 
+		result => {
+			res.sendStatus(200).json({error: false, errormessage: "", token: generateAccessToken(result), temporary: req.user.temporary})
+		},
+		error => {res.sendStatus(404).json({error: true, errormessage: "DB Error: " + error})} 
 		)
 	}
 	else{return next({statusCode: 404, error: true, errormessage: "Incorrect username and/or password"})}
