@@ -20,12 +20,12 @@
         ]   
     },
 
-    "requestChallenge/id":{
+    "GETchallenges/tile":{
         "request":[
-            "challengeId"
         ],
         "response":[
-            "description",
+            "title",
+            "expireDate",
             "language"
         ]
     },
@@ -54,18 +54,12 @@
             "userLeaderboard"
         ]
     },
-    "createChallenge":{
+    "PostChallenge":{
         "request":[
             "description",
             "language",
             "testCases",
-            "expireDate": [
-                "year",
-                "month",
-                "day",
-                "hour",
-                "minute"
-            ]
+            "expireDate"
         ],
         "response":[
         ]

@@ -1,4 +1,5 @@
 const express = require('express');
+const { LocalDateTime } = require('neo4j-driver');
 const router = express.Router();
 const auth = require('../utils/auth');
 const db = require('../utils/database');
@@ -8,7 +9,7 @@ const db = require('../utils/database');
 router.post('/', (req, res) => {
 
     let date=''+req.body.expireDate.year+'-'+req.body.expireDate.month+'-'+req.body.expireDate.day+'T'+req.body.expireDate.hour+
-    ':'+req.body.expireDate.minute+':00.000';
+    ':'+req.body.expireDate.minute+':00';
 
     let title=req.body.title;
 
@@ -43,12 +44,28 @@ router.post('/', (req, res) => {
 
 });
 
+router.get('/:title',(req, res) => {
+    db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.title as title , node.expireDate as expireDate, node.language as language, node.description as description',
+        {title: req.params.title}, 
+        result => {
+            let challenge;
+            result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": db.dateParse(chall.get("expireDate")), language: chall.get('language'), description: chall.get('description')}); //rivedi la data così non va
+            res.status(200).json(challenge);
+        },
+        error => {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    );
+});
+
 router.get('/',(req, res) => {
-    db.executeQuery('MATCH (node:Challenge) RETURN node.title as title , node.expireDate as expireDate',
-        null, 
+    const now=new Date();
+    db.executeQuery('MATCH (node:Challenge) WHERE node.expireDate > localdatetime($date) RETURN node.title as title, node.expireDate as expireDate, node.language as language',
+        {date: now.toISOString().slice(0,-1)}, 
         result => {
             let challenges=new Array;
-            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: chall.get('expireDate')})); //rivedi la data così non va
+            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')})); //rivedi la data così non va
             res.status(200).json(challenges);
         },
         error => {
@@ -58,21 +75,7 @@ router.get('/',(req, res) => {
     );
 });
 
-router.get('/:title',(req, res) => {
-    console.log("hey")
-    db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.title as title , node.expireDate as expireDate',
-        {title: req.params.title}, 
-        result => {
-            let challenge;
-            result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": chall.get("expireDate")}); //rivedi la data così non va
-            res.status(200).json(challenge);
-        },
-        error => {
-            console.log(error);
-            res.sendStatus(500);
-        }
-    );
-});
+
 
 router.post('/prova', (req, res) => {
 

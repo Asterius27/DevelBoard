@@ -23,4 +23,12 @@ async function executeQuery(query, params, fun, errFun){
 
 }
 
-module.exports = { connectTo, executeQuery }
+function dateParse(date){
+    let newDate={};
+    for (const prop in date){
+        newDate[prop]=date[prop].low;
+    }
+    return newDate;
+}
+
+module.exports = { connectTo, executeQuery, dateParse}
