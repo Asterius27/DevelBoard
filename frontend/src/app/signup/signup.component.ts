@@ -16,17 +16,23 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
+		  name: new FormControl('', Validators.required),
+		  surname: new FormControl('', Validators.required),
       username: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
     });
   }
 
+  // role: req.body.user
   public onSubmit() {
     this.authenticationService.register(
       this.registerForm.get('username')!.value,
       this.registerForm.get('email')!.value,
-      this.registerForm!.get('password')!.value
+      this.registerForm!.get('password')!.value,
+      this.registerForm!.get('name')!.value,
+      this.registerForm!.get('surname')!.value,
+      "USER"
     ).subscribe({
       next: (data) => {
         this.router.navigate(['/home']);

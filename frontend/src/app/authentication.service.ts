@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -14,31 +14,35 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router) {}
 
   public login(username: string, password: string): Observable<any> {
-    return this.http.post(
-      environment.apiUrl + '/user/login', // TODO change it
-      {
-        username: username,
-        password: password,
-      },
-      { responseType: 'text' }
-    ).pipe(tap(
+    const options = {
+      headers: new HttpHeaders({
+        authorization: 'Basic ' + btoa(username + ':' + password),
+        'cache-control': 'no-cache',
+        'Content-Type':  'application/x-www-form-urlencoded',
+      })
+    };
+    return this.http.get(environment.apiUrl + '/login', options).pipe(tap(
       (data:any) => {
         localStorage.setItem(this.tokenKey, data.token);
       }
     ));
   }
 
-  public register(username: string, email: string, password: string): Observable<any> {
+  public register(username: string, email: string, password: string, name: string, surname: string, role: string): Observable<any> {
     return this.http.post(
-      environment.apiUrl + '/user/register', // TODO change it
+      environment.apiUrl + '/register',
       {
-        username: username,
         email: email,
-        password: password,
+        password: password, 
+        name: name,
+        role: role,
+        username: username,
+        surname: surname
       },
-      { responseType: 'text' }
+      { responseType: 'json' }
     ).pipe(tap(
       (data:any) => {
+        console.log("The token is: " + data.token)
         localStorage.setItem(this.tokenKey, data.token);
       }
     ));

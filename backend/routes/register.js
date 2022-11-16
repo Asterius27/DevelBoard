@@ -1,11 +1,7 @@
 const express = require('express');
-const { authenticate } = require('passport');
 const router = express.Router()
 const db = require('../utils/database');
 const auth = require('../utils/auth');
-
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json())
 
 function createPassword(pwd){
 	let salt = crypto.randomBytes(16).toString('hex');
@@ -15,31 +11,35 @@ function createPassword(pwd){
 	return (salt,digest)
 }
 
-// GET REGISTER PAGE
 router.post('/', function (req,res){
 	let user = {
 		email: req.body.email,
 		password: req.body.password, 
 		name: req.body.name,
+		role: req.body.role,
 		username: req.body.username,
 		surname: req.body.surname
 	} 
 	if (user.email && user.password && user.name && user.username && user.surname) {
-
 		let (salt, digest) = createPassword(user.password)
-
-		db.executeQuery('CREATE (n:Person {nome:$name, email:$email, salt:$salt, digest:$digest, username:$username, surname:$surname}) return n', 
-		{email: user.email, salt:salt, digest:digest, name:user.name, username:user.username, surname:user.surname},
-		result => {
-			res.sendStatus(200).json(result.records.forEach(user => { auth.generateAccessToken(user) }))
+		db.executeQuery(
+			'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
+			{email: user.email, salt:salt, digest:digest, name:user.name, role:role, username:user.username, surname:user.surname},
+			result => {
+				let token = "";
+				result.records.forEach(user => { token = auth.generateAccessToken(user) })
+				res.sendStatus(200).json({token: token})
 			},
-		error => {return next({statusCode: 404, error: true, errormessage: "DB Error: " + error})}
+			error => {
+				console.log("DB Error: " + error)
+				res.sendStatus(500)
+			}
 		)
 	}
-	else{return next({statusCode: 404, error: true, errormessage: "Missing or wrong information!"})}
+	else{
+		console.log("Request Error: " + error)
+		res.sendStatus(404)
+	}
 });
-
-
-
 
 module.exports = router

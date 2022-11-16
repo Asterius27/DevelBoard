@@ -1,32 +1,27 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const router = express.Router();
 const dotenv = require('dotenv');
 const passport = require('passport');
 const passportHTTP = require('passport-http');
 const db = require('../utils/database');
 const auth = require('../utils/auth');
-
 dotenv.config();
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json())
-
 function validatePassword(user, pwd){
-		let hmac = crypto.createHmac('sha512', user.salt);
-		hmac.update(pwd);
-		let digest = hmac.digest('hex');
-		return (user.digest === digest);
+	let hmac = crypto.createHmac('sha512', user.salt);
+	hmac.update(pwd);
+	let digest = hmac.digest('hex');
+	return (user.digest === digest);
 }
-
 
 passport.use(new passportHTTP.BasicStrategy(
 	function(email, password, done) {
-		db.executeQuery(`MATCH (node:Person {email: $email, password: $password}) RETURN node.email`,{email: email, password: password}), 
+		db.executeQuery(`MATCH (node:Person {email: $email}) RETURN node`, {email: email}), 
 		result => {
 			if (!result) { 
 				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
 			else {
+				let user = result.records[0]
 				if (validatePassword(user, password)) { 
 					return done(null, user);
 				}
@@ -35,12 +30,10 @@ passport.use(new passportHTTP.BasicStrategy(
 				}
 			}
 		},
-		error => {return done({statusCode: 500, error: true, errormessage:error})}
+		error => {return done({statusCode: 500, error: true, errormessage: error})}
 	}
 ));
 
-
-// GET LOGIN PAGE
 router.get('/', passport.authenticate('basic', {session: false}), function (req, res) {
 	let tokendata = {
     username: req.user.username,
@@ -54,11 +47,5 @@ router.get('/', passport.authenticate('basic', {session: false}), function (req,
   let token_signed = auth.generateAccessToken(tokendata)
   return res.status(200).json({error: false, errormessage: "", token: token_signed});
 });
-
-
-
-// POST LOGIN PAGE
-router.post('/',   function (req, res) {})
-	
 
 module.exports = router
