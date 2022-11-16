@@ -15,7 +15,7 @@ function authenticateToken(req, res, next) {
 }
 
 function generateAccessToken(user) {
-	return jwt.sign(user, process.env.TOKEN); // TODO add , { expiresIn: '1800s' }
+	return jwt.sign(user, process.env.TOKEN, {}); // TODO add { expiresIn: '1800s' }
 }
 
 module.exports = { authenticateToken, generateAccessToken }
