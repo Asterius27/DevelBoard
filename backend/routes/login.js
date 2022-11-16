@@ -21,9 +21,10 @@ passport.use(new passportHTTP.BasicStrategy(
 			if (!result) { 
 				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
 			else {
-				let user = result.records[0]
-				if (validatePassword(user, password)) { 
-					return done(null, user);
+				let user = result.records[0].get(0)
+				console.log(user.properties)
+				if (validatePassword(user.properties, password)) { 
+					return done(null, user.properties);
 				}
 				else{
 					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"})
@@ -36,14 +37,14 @@ passport.use(new passportHTTP.BasicStrategy(
 
 router.get('/', passport.authenticate('basic', {session: false}), function (req, res) {
 	let tokendata = {
-    username: req.user.username,
-    name: req.user.name,
-    surname: req.user.surname,
-    email: req.user.email,
-    role: req.user.role
-  };
-  let token_signed = auth.generateAccessToken(tokendata)
-  return res.status(200).json({error: false, errormessage: "", token: token_signed});
+		username: req.user.username,
+		name: req.user.name,
+		surname: req.user.surname,
+		email: req.user.email,
+		role: req.user.role
+	};
+	let token_signed = auth.generateAccessToken(tokendata)
+	return res.status(200).json({error: false, errormessage: "", token: token_signed});
 });
 
 module.exports = router

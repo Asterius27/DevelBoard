@@ -26,9 +26,16 @@ router.post('/', function (req,res){
 			'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
 			{email: user.email, salt:salt, digest:digest, name:user.name, role:role, username:user.username, surname:user.surname},
 			result => {
-				let token = "";
-				result.records.forEach(user => { token = auth.generateAccessToken(user) })
-				res.sendStatus(200).json({token: token})
+				let user = result.records[0].get(0)
+				console.log(user.properties)
+				let token_data = {
+					username: user.properties.username,
+					name: user.properties.name,
+					surname: user.properties.surname,
+					email: user.properties.email,
+					role: user.properties.role
+				}
+				res.sendStatus(200).json({token: auth.generateAccessToken(token_data)})
 			},
 			error => {
 				console.log("DB Error: " + error)
