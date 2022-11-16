@@ -12,7 +12,7 @@ function createPassword(pwd){
 	return {salt,digest}
 }
 
-router.post('/', function (req,res){
+router.post('/', function (req, res, next) {
 	let user = {
 		email: req.body.email,
 		password: req.body.password, 
@@ -20,7 +20,7 @@ router.post('/', function (req,res){
 		role: req.body.role,
 		username: req.body.username,
 		surname: req.body.surname
-	} 
+	}
 	if (user.email && user.password && user.name && user.username && user.surname) {
 		let {salt, digest} = createPassword(user.password)
 		db.executeQuery(
@@ -36,17 +36,18 @@ router.post('/', function (req,res){
 					email: user.properties.email,
 					role: user.properties.role
 				}
-				res.send(200).json({token: auth.generateAccessToken(token_data)})
+				let token = auth.generateAccessToken(token_data)
+				return res.json({token: token})
 			},
 			error => {
 				console.log("DB Error: " + error)
-				res.sendStatus(500)
+				return res.sendStatus(500)
 			}
 		)
 	}
 	else{
 		console.log("Request Error: " + error)
-		res.sendStatus(404)
+		return res.sendStatus(404)
 	}
 });
 

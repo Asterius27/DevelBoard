@@ -34,11 +34,11 @@ router.post('/', (req, res) => {
         {title: title, date: date, description: req.body.description, language: req.body.language, testCases: req.body.testCases},
         result => {
             console.log(result.records);
-            res.sendStatus(200);
+            return res.sendStatus(200);
         },
         error => {
             console.log(error);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         }
     );
 
@@ -50,11 +50,11 @@ router.get('/:title',(req, res) => {
         result => {
             let challenge;
             result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": db.dateParse(chall.get("expireDate")), language: chall.get('language'), description: chall.get('description')}); //rivedi la data così non va
-            res.status(200).json(challenge);
+            return res.status(200).json(challenge);
         },
         error => {
             console.log(error);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         }
     );
 });
@@ -66,11 +66,11 @@ router.get('/',(req, res) => {
         result => {
             let challenges=new Array;
             result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')})); //rivedi la data così non va
-            res.status(200).json(challenges);
+            return res.status(200).json(challenges);
         },
         error => {
             console.log(error);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         }
     );
 });
@@ -84,11 +84,11 @@ router.post('/prova', (req, res) => {
         {title: req.body.title},
         result => {
             result.records.forEach(r => console.log(r.get('title')));
-            res.sendStatus(200);
+            return res.sendStatus(200);
         },
         error => {
             console.log(error);
-            res.sendStatus(500);
+            return res.sendStatus(500);
         }
     );
 });

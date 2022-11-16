@@ -3,18 +3,18 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const db = require('./utils/database');
-
-const port = process.env.PORT;
-
 const login = require('./routes/login') 
 const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
 const challenges = require('./routes/challenges')
-const app = express();
+const cors = require('cors')
 
+const app = express();
+const port = process.env.PORT;
+
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 
 app.use('/login', login)
 app.use('/register', register)
