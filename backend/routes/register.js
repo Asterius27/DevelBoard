@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router()
 const db = require('../utils/database');
 const auth = require('../utils/auth');
+const crypto = require('crypto');
 
 function createPassword(pwd){
 	let salt = crypto.randomBytes(16).toString('hex');
     let hmac = crypto.createHmac('sha512', salt);
     hmac.update(pwd);
 	let digest = hmac.digest('hex');
-	return (salt,digest)
+	return {salt,digest}
 }
 
 router.post('/', function (req,res){
@@ -21,10 +22,10 @@ router.post('/', function (req,res){
 		surname: req.body.surname
 	} 
 	if (user.email && user.password && user.name && user.username && user.surname) {
-		let (salt, digest) = createPassword(user.password)
+		let {salt, digest} = createPassword(user.password)
 		db.executeQuery(
 			'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
-			{email: user.email, salt:salt, digest:digest, name:user.name, role:role, username:user.username, surname:user.surname},
+			{email: user.email, salt:salt, digest:digest, name:user.name, role:user.role, username:user.username, surname:user.surname},
 			result => {
 				let user = result.records[0].get(0)
 				console.log(user.properties)
@@ -35,7 +36,7 @@ router.post('/', function (req,res){
 					email: user.properties.email,
 					role: user.properties.role
 				}
-				res.sendStatus(200).json({token: auth.generateAccessToken(token_data)})
+				res.send(200).json({token: auth.generateAccessToken(token_data)})
 			},
 			error => {
 				console.log("DB Error: " + error)

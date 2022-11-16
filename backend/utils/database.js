@@ -1,4 +1,5 @@
 //https://github.com/neo4j/neo4j-javascript-driver
+//docker run -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/s3cr3t neo4j
 const neo4j = require('neo4j-driver');
 
 let driver = {};

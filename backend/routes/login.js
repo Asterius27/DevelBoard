@@ -5,6 +5,7 @@ const passport = require('passport');
 const passportHTTP = require('passport-http');
 const db = require('../utils/database');
 const auth = require('../utils/auth');
+const crypto = require('crypto');
 dotenv.config();
 
 function validatePassword(user, pwd){
