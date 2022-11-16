@@ -17,11 +17,14 @@ function validatePassword(user, pwd){
 
 passport.use(new passportHTTP.BasicStrategy(
 	function(email, password, done) {
-		db.executeQuery(`MATCH (node:Person {email: $email}) RETURN node`, {email: email}), 
+		console.log(email, password)
+		db.executeQuery(`MATCH (node:Person {email: $email}) return node`, {email: email}), // TODO doesn't work
 		result => {
-			if (!result) { 
+			if (!result) {
+				console.log(result)
 				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
 			else {
+				console.log("hello")
 				let user = result.records[0].get(0)
 				console.log(user.properties)
 				if (validatePassword(user.properties, password)) { 
@@ -36,7 +39,7 @@ passport.use(new passportHTTP.BasicStrategy(
 	}
 ));
 
-router.get('/', passport.authenticate('basic', {session: false}), function (req, res) {
+router.get('/', passport.authenticate('basic', {session: false}), function (req, res, next) {
 	let tokendata = {
 		username: req.user.username,
 		name: req.user.name,
@@ -44,6 +47,7 @@ router.get('/', passport.authenticate('basic', {session: false}), function (req,
 		email: req.user.email,
 		role: req.user.role
 	};
+	console.log(tokendata)
 	let token_signed = auth.generateAccessToken(tokendata)
 	return res.status(200).json({error: false, errormessage: "", token: token_signed});
 });

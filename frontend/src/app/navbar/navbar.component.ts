@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,14 +9,13 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthenticationService) {}
 
   ngOnInit(): void {}
 
   logout() {
-    // TODO logout
     // TODO lock create challenge (it's only for admin)
-    this.router.navigate(['/']);
+    this.auth.logout();
   }
 
 }
