@@ -13,14 +13,13 @@ function connectTo(){
 }
 
 async function executeQuery(query, params, fun, errFun){
-    session= driver.session();
+    session= await driver.session();
     if (session) {
         await session.run(query, params)
         .then(fun)
         .catch(errFun)
         .then(() => session.close());
     }
-
 }
 
 function dateParse(date){
