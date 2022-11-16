@@ -13,10 +13,10 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  public login(username: string, password: string): Observable<any> {
+  public login(email: string, password: string): Observable<any> {
     const options = {
       headers: new HttpHeaders({
-        authorization: 'Basic ' + btoa(username + ':' + password),
+        authorization: 'Basic ' + btoa(email + ':' + password),
         'cache-control': 'no-cache',
         'Content-Type':  'application/x-www-form-urlencoded',
       })

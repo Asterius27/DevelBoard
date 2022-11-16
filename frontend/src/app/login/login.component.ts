@@ -16,14 +16,14 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
   }
 
   public onSubmit() {
     this.authenticationService.login(
-      this.loginForm.get('username')!.value,
+      this.loginForm.get('email')!.value,
       this.loginForm!.get('password')!.value
     ).subscribe({
       next: (data) => {
@@ -31,14 +31,5 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
-/*
-  public register(username: string, email: string, password: string): void {
-    this.authenticationClient
-      .register(username, email, password)
-      .subscribe((token) => {
-        this.router.navigate(['/']);
-      });
-  }*/
 
 }

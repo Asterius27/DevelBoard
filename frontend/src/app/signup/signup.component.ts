@@ -24,7 +24,6 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  // role: req.body.user
   public onSubmit() {
     this.authenticationService.register(
       this.registerForm.get('username')!.value,
