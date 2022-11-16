@@ -39,10 +39,8 @@ router.get('/', passport.authenticate('basic', {session: false}), function (req,
     username: req.user.username,
     name: req.user.name,
     surname: req.user.surname,
-    mail: req.user.mail,
-    role: req.user.role,
-    id: req.user.id,
-    temporary: req.user.temporary
+    email: req.user.email,
+    role: req.user.role
   };
   let token_signed = auth.generateAccessToken(tokendata)
   return res.status(200).json({error: false, errormessage: "", token: token_signed});
