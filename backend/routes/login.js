@@ -18,24 +18,29 @@ function validatePassword(user, pwd){
 passport.use(new passportHTTP.BasicStrategy(
 	function(email, password, done) {
 		console.log(email, password)
-		db.executeQuery(`MATCH (node:Person {email: $email}) return node`, {email: email}), // TODO doesn't work
-		result => {
-			if (!result) {
-				console.log(result)
-				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
-			else {
-				console.log("hello")
-				let user = result.records[0].get(0)
-				console.log(user.properties)
-				if (validatePassword(user.properties, password)) { 
-					return done(null, user.properties);
+		db.executeQuery(
+			'MATCH (node:Person {email: $email}) return node',
+			{email: email},
+			result => {
+				if (!result) {
+					console.log(result)
+					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
+				else {
+					console.log("hello")
+					let user = result.records[0].get(0)
+					console.log(user.properties)
+					if (validatePassword(user.properties, password)) { 
+						return done(null, user.properties);
+					}
+					else{
+						return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"})
+					}
 				}
-				else{
-					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"})
-				}
+			},
+			error => {
+				return done({statusCode: 500, error: true, errormessage: error})
 			}
-		},
-		error => {return done({statusCode: 500, error: true, errormessage: error})}
+		);
 	}
 ));
 

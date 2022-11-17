@@ -43,7 +43,7 @@ router.post('/', function (req, res, next) {
 				console.log("DB Error: " + error)
 				return res.sendStatus(500)
 			}
-		)
+		);
 	}
 	else{
 		console.log("Request Error: " + error)
