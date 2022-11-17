@@ -59,6 +59,7 @@
             "description",
             "language",
             "testCases",
+            "resultCases",
             "expireDate"
         ],
         "response":[

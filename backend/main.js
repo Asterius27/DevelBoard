@@ -1,4 +1,5 @@
 //https://neo4j.com/developer/js-movie-app/
+//https://getpino.io/#/docs/web?id=express
 const express = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -8,11 +9,13 @@ const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
 const challenges = require('./routes/challenges')
 const cors = require('cors')
+const pino = require('pino-http')
 
 const app = express();
 const port = process.env.PORT;
 
-app.use(cors())
+app.use(cors());
+app.use(pino);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

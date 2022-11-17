@@ -14,9 +14,12 @@ router.post('/', (req, res) => {
     let title=req.body.title;
 
     let challenge={
+        title: title,
         description: req.body.description,
         language: req.body.language,
-        testCases: req.body.testCases
+        testCases: req.body.testCases,
+        resultCases: req.body.resultCases,
+        expireDate: date
     };
 
     /*let jsonData=JSON.stringify(challenge);
@@ -30,8 +33,8 @@ router.post('/', (req, res) => {
     });*/
 
     db.executeQuery(
-        'CREATE (node:Challenge {title: $title, expireDate: localdatetime($date), description: $description, language: $language, testCases: $testCases}) RETURN node',
-        {title: title, date: date, description: req.body.description, language: req.body.language, testCases: req.body.testCases},
+        'CREATE (node:Challenge {title: $title, expireDate: localdatetime($date), description: $description, language: $language, testCases: $testCases, resultCases: $resultCases}) RETURN node',
+        {title: challenge.title, date: challenge.expireDate, description: challenge.description, language: challenge.language, testCases: challenge.testCases,resultCases: challenge.resultCases},
         result => {
             console.log(result.records);
             return res.sendStatus(200);

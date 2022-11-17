@@ -12,7 +12,8 @@
     "neo4j-driver": "^5.2.0",
     "neode": "^0.4.8",
     "passport": "^0.6.0",
-    "passport-http": "^0.3.0"
+    "passport-http": "^0.3.0",
+    "pino-http": "^8.2.1"
   },
   "name": "backend",
   "version": "1.0.0",
