@@ -10,18 +10,18 @@ export class ChallengesService {
 
   constructor(private http: HttpClient) {}
 
-  public getChallenge(id: string): Observable<any> {
+  public getChallenge(title: string): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/challenges/' + id, // TODO change it
-      { responseType: 'text' }
+      environment.apiUrl + '/challenges/' + title,
+      { responseType: 'json' }
     );
   }
 
   public getChallenges(params = {}): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/challenges/filter', // TODO change it
+      environment.apiUrl + '/challenges',
       { 
-        responseType: 'text', 
+        responseType: 'json', 
         params: new HttpParams({fromObject: params}) 
       }
     );

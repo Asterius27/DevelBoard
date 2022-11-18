@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as ace from "ace-builds";
 import { ChallengesService } from '../challenges.service';
 
@@ -11,10 +12,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("editor") private editor: ElementRef<HTMLElement> = {} as ElementRef;
   private aceEditor = {} as ace.Ace.Editor;
+  public title = "";
+  public challenge: {[k: string]: any} = {};
 
-  constructor(private c: ChallengesService) {}
+  constructor(private c: ChallengesService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.title = this.route.snapshot.paramMap.get('title') || "";
+  }
 
   ngAfterViewInit(): void {
     ace.require("ace/ext/language_tools");
@@ -32,9 +37,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   load_challenge() {
-    this.c.getChallenge("id").subscribe({ // TODO change id
+    this.c.getChallenge(this.title).subscribe({
       next: (data) => {
-        // TODO load the challenge
+        this.challenge = data;
       }
     });
   }

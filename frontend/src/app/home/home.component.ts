@@ -9,6 +9,8 @@ import { ChallengesService } from '../challenges.service';
 })
 export class HomeComponent implements OnInit {
 
+  public challenges = [];
+
   constructor(public router: Router, private c: ChallengesService) {} // TODO timers for challenges
 
   ngOnInit(): void {
@@ -18,9 +20,16 @@ export class HomeComponent implements OnInit {
   load_challenges() {
     this.c.getChallenges({}).subscribe({ // TODO add filter
       next: (data) => {
-        // TODO load the challenges
+        console.log(data) // title, expireDate language
+        this.challenges = data; // TODO divide data in three columns
       }
     });
+  }
+
+  load_editor(challenge:any, event:any) {
+    event.preventDefault();
+    // console.log(challenge['title']);
+    this.router.navigate(['/editor', {title: challenge['title']}]);
   }
 
 }
