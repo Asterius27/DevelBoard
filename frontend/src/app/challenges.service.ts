@@ -12,14 +12,14 @@ export class ChallengesService {
 
   public getChallenge(id: string): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/requestChallenge/' + id, // TODO change it
+      environment.apiUrl + '/challenges/' + id, // TODO change it
       { responseType: 'text' }
     );
   }
 
   public getChallenges(params = {}): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/requestChallenge/filter', // TODO change it
+      environment.apiUrl + '/challenges/filter', // TODO change it
       { 
         responseType: 'text', 
         params: new HttpParams({fromObject: params}) 
@@ -38,13 +38,15 @@ export class ChallengesService {
     );
   }
 
-  public createChallenge(description: string, language: string, testCases: string, expireDate: string): Observable<any> {
+  public createChallenge(title: string, description: string, language: string, testCases: string, resultCases: string, expireDate: any): Observable<any> {
     return this.http.post(
-      environment.apiUrl + '/createChallenge', // TODO change it
+      environment.apiUrl + '/challenges',
       {
+        title: title,
         description: description,
         language: language,
         testCases: testCases,
+        resultCases: resultCases,
         expireDate: expireDate
       },
       { responseType: 'text' }

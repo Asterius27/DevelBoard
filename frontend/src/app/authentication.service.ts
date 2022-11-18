@@ -42,7 +42,7 @@ export class AuthenticationService {
       { responseType: 'json' }
     ).pipe(tap(
       (data:any) => {
-        console.log("The token is: " + data.token)
+        // console.log("The token is: " + data.token)
         localStorage.setItem(this.tokenKey, data.token);
       }
     ));

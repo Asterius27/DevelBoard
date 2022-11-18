@@ -21,6 +21,7 @@ router.post('/', function (req, res, next) {
 		username: req.body.username,
 		surname: req.body.surname
 	}
+	// console.log(user);
 	if (user.email && user.password && user.name && user.username && user.surname) {
 		let {salt, digest} = createPassword(user.password)
 		db.executeQuery(
@@ -28,7 +29,7 @@ router.post('/', function (req, res, next) {
 			{email: user.email, salt:salt, digest:digest, name:user.name, role:user.role, username:user.username, surname:user.surname},
 			result => {
 				let user = result.records[0].get(0)
-				console.log(user.properties)
+				// console.log(user.properties)
 				let token_data = {
 					username: user.properties.username,
 					name: user.properties.name,

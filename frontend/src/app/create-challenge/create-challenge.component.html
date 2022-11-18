@@ -1,19 +1,29 @@
 <form [formGroup]="createChallengeForm" style="width: 70%; margin: auto;">
     <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" formControlName="title">
+    </div>
+    <div class="form-group">
         <label for="descr">Description</label>
         <input type="text" class="form-control" id="descr" formControlName="description">
     </div>
     <div class="form-group">
         <label for="lang">Language</label>
-        <input type="text" class="form-control" id="lang" formControlName="language">
+        <select class="form-select" id="lang" formControlName="language">
+            <option>Java</option>
+        </select>
     </div>
     <div class="form-group">
         <label for="tests">Test Cases</label>
-        <input type="text" class="form-control" id="tests" formControlName="testCases">
+        <input type="text" class="form-control" id="tests" formControlName="testCases" placeholder="{1, 2}, {&quot;ciao&quot;, &quot;mario&quot;}, {1.5, 4.234},...">
+    </div>
+    <div class="form-group">
+        <label for="result">Result Cases</label>
+        <input type="text" class="form-control" id="result" formControlName="resultCases" placeholder="{3}, {&quot;arrivederci&quot;}, {10.567},...">
     </div>
     <div class="form-group">
         <label for="date">Expire Date</label>
-        <input type="text" class="form-control" id="date" formControlName="expireDate">
+        <input type="date" [min]="minDate" class="form-control" id="date" formControlName="expireDate">
     </div>
     <button type="submit" class="btn btn-primary" (click)="submit()" style="margin-top: 20px;">Submit</button>
 </form>

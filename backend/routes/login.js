@@ -17,18 +17,17 @@ function validatePassword(user, pwd){
 
 passport.use(new passportHTTP.BasicStrategy(
 	function(email, password, done) {
-		console.log(email, password)
+		// console.log(email, password)
 		db.executeQuery(
 			'MATCH (node:Person {email: $email}) return node',
 			{email: email},
 			result => {
 				if (!result) {
-					console.log(result)
+					// console.log(result)
 					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
 				else {
-					console.log("hello")
 					let user = result.records[0].get(0)
-					console.log(user.properties)
+					// console.log(user.properties)
 					if (validatePassword(user.properties, password)) { 
 						return done(null, user.properties);
 					}
@@ -52,7 +51,7 @@ router.get('/', passport.authenticate('basic', {session: false}), function (req,
 		email: req.user.email,
 		role: req.user.role
 	};
-	console.log(tokendata)
+	// console.log(tokendata)
 	let token_signed = auth.generateAccessToken(tokendata)
 	return res.status(200).json({error: false, errormessage: "", token: token_signed});
 });

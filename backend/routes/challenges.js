@@ -4,7 +4,7 @@ const router = express.Router();
 const auth = require('../utils/auth');
 const db = require('../utils/database');
 
-//router.use(auth.authenticateToken);
+router.use(auth.authenticateToken);
 
 router.post('/', (req, res) => {
 
@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
         'CREATE (node:Challenge {title: $title, expireDate: localdatetime($date), description: $description, language: $language, testCases: $testCases, resultCases: $resultCases}) RETURN node',
         {title: challenge.title, date: challenge.expireDate, description: challenge.description, language: challenge.language, testCases: challenge.testCases,resultCases: challenge.resultCases},
         result => {
-            console.log(result.records);
+            console.log(result.records[0].get(0).properties);
             return res.sendStatus(200);
         },
         error => {

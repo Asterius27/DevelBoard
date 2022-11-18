@@ -7,8 +7,10 @@ function authenticateToken(req, res, next) {
     if (token == null) return res.sendStatus(401)
   
     jwt.verify(token, process.env.TOKEN, (err, data) => {
-        console.log(err)
-        if (err) return res.sendStatus(403)
+        if (err) {
+            console.log(err)
+            return res.sendStatus(403)
+        }
         req.user = data.user
         next()
     })
