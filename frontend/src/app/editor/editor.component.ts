@@ -35,6 +35,18 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.load_challenge();
   }
 
+  disabled() {
+    if (Object.entries(this.aceEditor).length !== 0) {
+      if (this.aceEditor.getValue()) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
+
   load_challenge() {
     this.c.getChallenge(this.title).subscribe({
       next: (data) => {

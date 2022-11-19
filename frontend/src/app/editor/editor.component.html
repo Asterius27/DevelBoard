@@ -8,5 +8,5 @@
 <div class="app-ace-editor" #editor></div>
 
 <div class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
-    <button class="btn btn-lg btn-success btn-block" (click)="uploadCode();">Send</button>
+    <button class="btn btn-lg btn-success btn-block" (click)="uploadCode();" [disabled]="disabled()">Send</button>
 </div>
