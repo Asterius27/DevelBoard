@@ -27,12 +27,13 @@ export class ChallengesService {
     );
   }
 
-  public submitCode(code: string, language: string): Observable<any> {
+  public submitCode(code: string, language: string, title: string): Observable<any> {
     return this.http.post(
-      environment.apiUrl + '/sendCode', // TODO change it
+      environment.apiUrl + '/evaluate',
       {
         code: code,
-        language: language
+        language: language,
+        title: title
       },
       { responseType: 'text' }
     );

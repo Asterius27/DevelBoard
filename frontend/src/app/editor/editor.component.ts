@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as ace from "ace-builds";
 import { ChallengesService } from '../challenges.service';
 
@@ -15,7 +15,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   public title = "";
   public challenge: {[k: string]: any} = {};
 
-  constructor(private c: ChallengesService, private route: ActivatedRoute) {}
+  constructor(private c: ChallengesService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('title') || "";
@@ -27,7 +27,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.12.5/src-noconflict');
     this.aceEditor = ace.edit(this.editor.nativeElement);
     this.aceEditor.setTheme('ace/theme/twilight');
-    this.aceEditor.session.setMode('ace/mode/java');
     this.aceEditor.setOptions({
       enableBasicAutocompletion: true,
       enableSnippets: true,
@@ -40,15 +39,18 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.c.getChallenge(this.title).subscribe({
       next: (data) => {
         this.challenge = data;
+        this.aceEditor.session.setMode('ace/mode/' + this.challenge['language'].toLowerCase());
       }
     });
   }
 
   uploadCode() {
     if (Object.entries(this.aceEditor).length !== 0) {
-      console.log(this.aceEditor.getValue());
-      this.c.submitCode(this.aceEditor.getValue(), "java").subscribe({ // TODO add language variable
+      let temp:string = "class Challenge {\n" + this.aceEditor.getValue() + "\n}";
+      // console.log(this.aceEditor.getValue());
+      this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
+          this.router.navigate(['/home']);
           // TODO show evaluation/output
         }
       });

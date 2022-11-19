@@ -7,7 +7,7 @@ const auth = require('../utils/auth');
 router.use(auth.authenticateToken);
 
 router.post('/', (req, res, next) => {
-    // TODO get test cases from db
+    // TODO get test cases from db (req.body.title)
     let i = 0;
     let dirName = "./submitted_code/file"+i;
     let fileName = "temp."+req.body.language;
@@ -27,21 +27,23 @@ router.post('/', (req, res, next) => {
             if (!execErr && !err) {
                 exec("java -classpath " + dirName + " Challenge", (execErr, out, err) => { // TODO add test cases, all classes must be inside a Challenge class
                     if (err || execErr) {
-                        // console.log(err);
-                        // console.log(execErr);
+                        console.log(err);
+                        console.log(execErr);
                         fs.rmSync(dirName, { recursive: true, force: true });
-                        return res.status(200).json({"cmd error": execErr, "program error": err});
+                        return res.sendStatus(200); // TODO send score
                     }
                     else {
-                        // console.log(out);
+                        console.log(out);
                         fs.rmSync(dirName, { recursive: true, force: true });
-                        return res.status(200).json({"output": out});
+                        return res.sendStatus(200); // TODO send score
                     }
                 });
             }
             else {
                 console.log(err);
                 console.log(execErr);
+                fs.rmSync(dirName, { recursive: true, force: true });
+                return res.sendStatus(200); // TODO send score
             }
         });
     });

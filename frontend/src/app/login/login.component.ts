@@ -15,6 +15,9 @@ export class LoginComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit(): void {
+    if (localStorage.getItem(this.authenticationService.tokenKey)) {
+      this.router.navigate(['/home']);
+    }
     this.loginForm = new FormGroup({
       email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthenticationService {
 
-  private tokenKey = 'token';
+  public tokenKey = 'token';
 
   constructor(private http: HttpClient, private router: Router) {}
 
