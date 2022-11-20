@@ -11,7 +11,7 @@ router.use(auth.authenticateToken);
 router.post('/', async (req, res, next) => {
     let challenge = [];
     let score = 0;
-    let max_score = 0; // TODO
+    let max_score = 0;
     let compile = false;
     db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.resultCases as resultCases, node.testCases as testCases',
         {title: req.body.title},
@@ -44,6 +44,7 @@ router.post('/', async (req, res, next) => {
         let results_json = challenge.get("resultCases").split('; ');
         tests_json.forEach((test) => tests.push(JSON.parse(test)));
         results_json.forEach((result) => results.push(JSON.parse(result)));
+        max_score = results.length;
         // console.log(tests);
         for (let i = 0; i < tests.length; i++) {
             let args = "";
@@ -70,16 +71,16 @@ router.post('/', async (req, res, next) => {
         console.log(execErr);
         compile = false;
     }
-    db.executeQuery('MATCH (p:Person), (c:Challenge) WHERE p.email = $email AND c.title = $title CREATE (p)-[r:RELTYPE {score: $score, compile: $compile}]->(c) RETURN type(r)',
-        {email: req.user.email, title: req.body.title, score: score, compile: compile}, 
+    db.executeQuery('MATCH (p:Person), (c:Challenge) WHERE p.email = $email AND c.title = $title CREATE (p)-[r:RELTYPE {score: $score, compile: $compile, max_score: $max_score}]->(c) RETURN type(r)',
+        {email: req.user.email, title: req.body.title, score: score, compile: compile, max_score: max_score}, 
         (result) => {
             // console.log(score);
             // console.log(compile);
             fs.rmSync(dirName, { recursive: true, force: true });
-            return res.status(200).json({score: score, compile: compile});
+            return res.status(200).json({score: score, compile: compile, max_score: max_score});
         }, 
         (err) => {
-            console.log(error);
+            console.log(err);
             return res.sendStatus(500);
         }
     );
