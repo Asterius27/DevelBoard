@@ -63,7 +63,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
           this.router.navigate(['/home']);
-          // TODO show evaluation/output
+          // TODO show evaluation/output (data.score, data.compile)
         }
       });
     }

@@ -26,7 +26,7 @@ app.use('/challenges', challenges)
 
 app.listen(port, () => {
     console.log('app listening on port '+port);
-    db.connectTo();
+    db.connectTo(); // TODO create admin account
 
     db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',
         null,
