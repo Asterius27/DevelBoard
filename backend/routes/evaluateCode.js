@@ -11,6 +11,7 @@ router.use(auth.authenticateToken);
 router.post('/', async (req, res, next) => {
     let challenge = [];
     let score = 0;
+    let max_score = 0; // TODO
     let compile = false;
     db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.resultCases as resultCases, node.testCases as testCases',
         {title: req.body.title},
