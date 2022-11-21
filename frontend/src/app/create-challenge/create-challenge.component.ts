@@ -43,27 +43,33 @@ export class CreateChallengeComponent implements OnInit {
     });
   }
 
-  submit() { // check that number of test cases = number of result cases
+  submit() {
     let temp:string[] = this.createChallengeForm.get('expireDate')!.value.split('-');
-    let date = {
-      year: temp[0],
-      month: temp[1],
-      day: temp[2],
-      hour: 16,
-      minute: 20
-    }
-    this.c.createChallenge(
-      this.createChallengeForm.get('title')!.value,
-      this.createChallengeForm.get('description')!.value,
-      this.createChallengeForm.get('language')!.value,
-      this.createChallengeForm.get('testCases')!.value,
-      this.createChallengeForm.get('resultCases')!.value,
-      date
-    ).subscribe({
-      next: (data) => {
-        this.router.navigate(['/home']); // TODO pop up window
+    let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; ');
+    let results:string[] = this.createChallengeForm.get('resultCases')!.value.split('; ');
+    if (tests.length === results.length) {
+      let date = {
+        year: temp[0],
+        month: temp[1],
+        day: temp[2],
+        hour: 16,
+        minute: 20
       }
-    });
+      this.c.createChallenge(
+        this.createChallengeForm.get('title')!.value,
+        this.createChallengeForm.get('description')!.value,
+        this.createChallengeForm.get('language')!.value,
+        this.createChallengeForm.get('testCases')!.value,
+        this.createChallengeForm.get('resultCases')!.value,
+        date
+      ).subscribe({
+        next: (data) => {
+          this.router.navigate(['/home']); // TODO pop up window
+        }
+      });
+    } else {
+      // TODO show error
+    }
   }
 
 }

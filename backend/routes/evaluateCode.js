@@ -57,10 +57,14 @@ router.post('/', async (req, res, next) => {
                 console.log(stderr);
             }
             else {
-                let out = JSON.stringify(stdout).slice(1, -5);
+                let out = JSON.stringify(stdout).slice(1, -5); // TODO might be different in linux (docker)
+                let res_out = JSON.stringify(results[i][0]);
+                if (res_out.charAt(0) === '"') {
+                    res_out = res_out.slice(1, -1);
+                }
                 // console.log(out);
-                // console.log(JSON.stringify(results[i][0]));
-                if (out === JSON.stringify(results[i][0])) {
+                // console.log(res_out);
+                if (out === res_out) {
                     score = score + 1;
                 }
             }

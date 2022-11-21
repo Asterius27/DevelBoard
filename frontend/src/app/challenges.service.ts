@@ -35,7 +35,7 @@ export class ChallengesService {
         language: language,
         title: title
       },
-      { responseType: 'text' }
+      { responseType: 'json' }
     );
   }
 

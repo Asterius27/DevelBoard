@@ -62,7 +62,7 @@ router.get('/:title',(req, res) => {
     );
 });
 
-router.get('/',(req, res) => {
+router.get('/',(req, res) => { // TODO ignore challenge if rel with the requesting user exists
     const now=new Date();
     db.executeQuery('MATCH (node:Challenge) WHERE node.expireDate > localdatetime($date) RETURN node.title as title, node.expireDate as expireDate, node.language as language',
         {date: now.toISOString().slice(0,-1)}, 
@@ -78,8 +78,7 @@ router.get('/',(req, res) => {
     );
 });
 
-
-
+/*
 router.post('/prova', (req, res) => {
 
     db.executeQuery(
@@ -95,5 +94,6 @@ router.post('/prova', (req, res) => {
         }
     );
 });
+*/
 
 module.exports = router

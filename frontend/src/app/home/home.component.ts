@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   load_challenges() {
     this.c.getChallenges({}).subscribe({ // TODO add filter
       next: (data) => {
-        console.log(data) // title, expireDate language
+        console.log(data) // title, expireDate, language
         this.challenges = data; // TODO divide data in three columns
       }
     });

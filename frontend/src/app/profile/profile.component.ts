@@ -10,6 +10,6 @@ export class ProfileComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {} // TODO (also remove editprofile for now)
 
 }

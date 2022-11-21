@@ -62,8 +62,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
       // console.log(this.aceEditor.getValue());
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
+          console.log(data.score);
           this.router.navigate(['/home']);
-          // TODO show evaluation/output (data.score, data.compile)
+          // TODO show evaluation/output (data.score, data.compile) pop up window
         }
       });
     }
