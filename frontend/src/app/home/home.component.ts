@@ -9,7 +9,9 @@ import { ChallengesService } from '../challenges.service';
 })
 export class HomeComponent implements OnInit {
 
-  public challenges = [];
+  public challenges_c1:{title: string, language: string, expireDate: {}}[] = [];
+  public challenges_c2:{title: string, language: string, expireDate: {}}[] = [];
+  public challenges_c3:{title: string, language: string, expireDate: {}}[] = [];
 
   constructor(public router: Router, private c: ChallengesService) {} // TODO timers for challenges
 
@@ -20,8 +22,21 @@ export class HomeComponent implements OnInit {
   load_challenges() {
     this.c.getChallenges({}).subscribe({ // TODO add filter
       next: (data) => {
-        console.log(data) // title, expireDate, language
-        this.challenges = data; // TODO divide data in three columns
+        // console.log(data) // title, expireDate, language
+        for (let i = 0; i < data.length; i++) {
+          if (i % 3 === 0) {
+            this.challenges_c1.push(data[i]);
+          }
+          if (i % 3 === 1) {
+            this.challenges_c2.push(data[i]);
+          }
+          if (i % 3 === 2) {
+            this.challenges_c3.push(data[i]);
+          }
+        }
+        // console.log(this.challenges_c1[0].expireDate);
+        // console.log(this.challenges_c2);
+        // console.log(this.challenges_c3);
       }
     });
   }
