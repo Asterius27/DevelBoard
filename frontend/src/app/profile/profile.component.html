@@ -5,11 +5,11 @@
           <div class="card">
             <div class="rounded-top text-white d-flex flex-row" style="background-color: #000;">
               <div class="ms-3 flex-grow-1" style="margin-top: 10px;">
-                <h5>Andy Horwitz</h5>
-                <p>New York</p>
+                <h5>{{ user['name'] }} {{ user['surname'] }}</h5>
+                <p>{{ user['username'] }}</p>
               </div>
               <button type="button" class="btn btn-outline-light" data-mdb-ripple-color="dark"
-                style="z-index: 1; margin-top: 20px; margin-bottom: 20px; margin-right: 20px;" routerLink="/editprofile">
+                style="z-index: 1; margin-top: 20px; margin-bottom: 20px; margin-right: 20px;" (click)="edit_profile();" disabled> <!-- TODO remove disabled -->
                 Edit profile
               </button>
             </div>
@@ -17,17 +17,15 @@
               <div class="mb-5">
                 <p class="lead fw-normal mb-1">About</p>
                 <div class="p-4" style="background-color: #f8f9fa;">
-                  <p class="font-italic mb-1">Web Developer</p>
-                  <p class="font-italic mb-1">Lives in New York</p>
-                  <p class="font-italic mb-0">Photographer</p>
+                  <p class="font-italic mb-1">Email: {{ user['email'] }}</p>
                 </div>
               </div>
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="lead fw-normal mb-0">Statistics</p>
               </div>
               <div class="progress" style="height: 2vw;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Wins</div>
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">Losses</div>
+                <div class="progress-bar bg-success" role="progressbar" [ngStyle]="{'width': str_percentage}" aria-valuemin="0" aria-valuemax="100">{{ str_percentage }}</div>
+                <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="{'width': str_percentage_tot}" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>

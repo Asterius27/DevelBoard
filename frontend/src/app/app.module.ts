@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
@@ -24,6 +23,7 @@ import { AuthenticationService } from './authentication.service';
 import { ChallengesService } from './challenges.service';
 import { LeaderboardsService } from './leaderboards.service';
 import { CreateChallengeComponent } from './create-challenge/create-challenge.component';
+import { UsersService } from './users.service';
 
 @NgModule({
   declarations: [
@@ -55,8 +55,9 @@ import { CreateChallengeComponent } from './create-challenge/create-challenge.co
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     {provide: AuthenticationService, useClass: AuthenticationService},
     {provide: ChallengesService, useClass: ChallengesService},
-    {provide: LeaderboardsService, useClass: LeaderboardsService}
+    {provide: LeaderboardsService, useClass: LeaderboardsService},
+    {provide: UsersService, useClass: UsersService}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
