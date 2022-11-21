@@ -12,6 +12,8 @@ export class CreateChallengeComponent implements OnInit {
 
   public createChallengeForm!: FormGroup;
   public minDate = "";
+  public display = "none";
+  public display_error = "none";
 
   constructor(private router: Router, private c: ChallengesService) {}
 
@@ -64,12 +66,20 @@ export class CreateChallengeComponent implements OnInit {
         date
       ).subscribe({
         next: (data) => {
-          this.router.navigate(['/home']); // TODO pop up window
+          this.display = "block";
         }
       });
     } else {
-      // TODO show error
+      this.display_error = "block";
     }
+  }
+
+  return_home() {
+    this.router.navigate(['/home']);
+  }
+
+  close_popup() {
+    this.display_error = "none";
   }
 
 }

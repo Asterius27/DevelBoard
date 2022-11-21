@@ -13,6 +13,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild("editor") private editor: ElementRef<HTMLElement> = {} as ElementRef;
   private aceEditor = {} as ace.Ace.Editor;
   public title = "";
+  public display = "none";
+  public compile = "";
+  public score = "";
   public challenge: {[k: string]: any} = {};
 
   constructor(private c: ChallengesService, private route: ActivatedRoute, private router: Router) {}
@@ -56,18 +59,27 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
   }
 
-  uploadCode() {
+  uploadCode() { // TODO disable send button and add loading spinner
     if (Object.entries(this.aceEditor).length !== 0) {
       let temp:string = "class Challenge {\n" + this.aceEditor.getValue() + "\n}";
       // console.log(this.aceEditor.getValue());
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
-          console.log(data.score);
-          this.router.navigate(['/home']);
-          // TODO show evaluation/output (data.score, data.compile) pop up window
+          // console.log(data.score);
+          this.score = data.score + "/" + data.max_score;
+          if (data.compile) {
+            this.compile = "compiled";
+          } else {
+            this.compile = "did not compile";
+          }
+          this.display = "block";
         }
       });
     }
+  }
+
+  close_editor() {
+    this.router.navigate(['/home']);
   }
 
 }

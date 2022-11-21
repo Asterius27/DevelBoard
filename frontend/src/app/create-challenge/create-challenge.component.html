@@ -1,3 +1,35 @@
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': display}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Done!</h5>
+        </div>
+        <div class="modal-body">
+          Your challenge was successfully created!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="return_home();">Return to Home</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': display_error}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Error</h5>
+        </div>
+        <div class="modal-body">
+          Please make sure the number of test cases is the same as the number of result cases and that they are formatted correctly.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="close_popup();">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 <form [formGroup]="createChallengeForm" style="width: 70%; margin: auto;">
     <div class="form-group">
         <label for="title">Title</label>

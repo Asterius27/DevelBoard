@@ -1,3 +1,19 @@
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': display}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Your code was submitted!</h5>
+        </div>
+        <div class="modal-body">
+          Your code {{ compile }} and your score is: {{ score }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="close_editor();">Return to Home</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 <div class="card" style="margin-top: 20px; margin-bottom: 20px;">
     <div class="card-body">
         <h5 class="card-title">{{ challenge['title'] }}</h5>
