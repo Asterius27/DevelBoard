@@ -18,7 +18,7 @@ export class CreateChallengeComponent implements OnInit {
   constructor(private router: Router, private c: ChallengesService) {}
 
   ngOnInit(): void {
-    let today = new Date(); // TODO add hour and minute
+    let today = new Date();
     let str_day = "";
     let str_month = "";
     let str_year = today.getFullYear().toString();
@@ -41,7 +41,8 @@ export class CreateChallengeComponent implements OnInit {
       language: new FormControl('', Validators.required),
       testCases: new FormControl('', Validators.required),
       resultCases: new FormControl('', Validators.required),
-      expireDate: new FormControl('', Validators.required)
+      expireDate: new FormControl('', Validators.required),
+      expireTime: new FormControl('', Validators.required)
     });
   }
 
@@ -49,13 +50,14 @@ export class CreateChallengeComponent implements OnInit {
     let temp:string[] = this.createChallengeForm.get('expireDate')!.value.split('-');
     let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; ');
     let results:string[] = this.createChallengeForm.get('resultCases')!.value.split('; ');
+    let time:string[] = this.createChallengeForm.get('expireTime')!.value.split(':');
     if (tests.length === results.length) {
       let date = {
         year: temp[0],
         month: temp[1],
         day: temp[2],
-        hour: 16,
-        minute: 20
+        hour: time[0],
+        minute: time[1]
       }
       this.c.createChallenge(
         this.createChallengeForm.get('title')!.value,

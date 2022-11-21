@@ -57,5 +57,9 @@
         <label for="date">Expire Date</label>
         <input type="date" [min]="minDate" class="form-control" id="date" formControlName="expireDate">
     </div>
+    <div class="form-group">
+      <label for="time">Expire Time</label>
+      <input type="time" class="form-control" id="time" formControlName="expireTime">
+  </div>
     <button type="submit" class="btn btn-primary" (click)="submit()" style="margin-top: 20px;">Submit</button>
 </form>
