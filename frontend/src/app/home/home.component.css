@@ -23,8 +23,8 @@ body{
 
 .pic1{
     position: relative;
-    right: 22px;
     top: 23px;
+    padding-bottom: 23px;
 }
 
 .pic2{
