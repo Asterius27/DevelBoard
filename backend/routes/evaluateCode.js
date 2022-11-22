@@ -63,7 +63,7 @@ router.post('/', async (req, res, next) => {
                         if (res_out.charAt(0) === '"') {
                             res_out = res_out.slice(1, -1);
                         }
-                        console.log(out);
+                        // console.log(out);
                         // console.log(res_out);
                         if (out === res_out) {
                             score = score + 1;
