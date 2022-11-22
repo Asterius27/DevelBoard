@@ -23,6 +23,9 @@
 
 <div class="app-ace-editor" #editor></div>
 
-<div class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+<div class="text-center" style="position:relative; margin-top: 20px; margin-bottom: 20px;">
     <button class="btn btn-lg btn-success btn-block" (click)="uploadCode();" [disabled]="disabled()">Send</button>
+    <div class="spinner-border" style="position: absolute; margin-left: 15px; top: 17%" role="status" [hidden]="loading">
+      <span class="sr-only"></span>
+    </div>
 </div>
