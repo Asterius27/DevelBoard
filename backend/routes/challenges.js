@@ -62,10 +62,10 @@ router.get('/:title',(req, res) => {
     );
 });
 
-router.get('/',(req, res) => { // TODO ignore challenge if rel with the requesting user exists
+router.get('/',(req, res) => {
     const now=new Date();
-    db.executeQuery('MATCH (node:Challenge) WHERE node.expireDate > localdatetime($date) RETURN node.title as title, node.expireDate as expireDate, node.language as language',
-        {date: now.toISOString().slice(0,-1)}, 
+    db.executeQuery('MATCH (node:Challenge) WHERE node.expireDate > localdatetime($date) AND NOT exists((:Person {email: $email})-[:RELTYPE]->(node)) RETURN node.title as title, node.expireDate as expireDate, node.language as language',
+        {date: now.toISOString().slice(0,-1), email: req.user.email}, 
         result => {
             let challenges=new Array;
             result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')})); //rivedi la data così non va
