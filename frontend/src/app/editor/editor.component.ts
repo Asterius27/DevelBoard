@@ -17,6 +17,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   public compile = "";
   public score = "";
   public challenge: {[k: string]: any} = {};
+  public upload = false;
+  public loading = true;
 
   constructor(private c: ChallengesService, private route: ActivatedRoute, private router: Router) {}
 
@@ -40,7 +42,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   disabled() {
     if (Object.entries(this.aceEditor).length !== 0) {
-      if (this.aceEditor.getValue()) {
+      if (this.aceEditor.getValue() && !this.upload) {
         return false;
       } else {
         return true;
@@ -59,8 +61,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
   }
 
-  uploadCode() { // TODO disable send button and add loading spinner
+  uploadCode() {
     if (Object.entries(this.aceEditor).length !== 0) {
+      this.upload = true;
+      this.loading = false;
       let temp:string = "class Challenge {\n" + this.aceEditor.getValue() + "\n}";
       // console.log(this.aceEditor.getValue());
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
@@ -73,6 +77,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
             this.compile = "did not compile";
           }
           this.display = "block";
+          this.loading = true;
         }
       });
     }
