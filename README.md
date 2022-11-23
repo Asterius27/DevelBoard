@@ -11,5 +11,12 @@ docker run -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/s3cr3t neo4j
 
 Angular (Frontend):
 ```
-docker run -d -p 80:80 <image_id>
+docker build --tag develboard_frontend .
+docker run -d -p 80:80 develboard_frontend
+```
+
+Node (Backend):
+```
+docker build --tag develboard_backend .
+docker run -d -p 3000:3000 develboard_backend
 ```

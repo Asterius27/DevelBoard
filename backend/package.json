@@ -18,7 +18,7 @@
   },
   "name": "backend",
   "version": "1.0.0",
-  "main": "test.js",
+  "main": "main.js",
   "scripts": {
     "start": "node main.js | pino-pretty",
     "nodemon": "nodemon login.js"

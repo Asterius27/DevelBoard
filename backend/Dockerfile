@@ -1,11 +1,10 @@
 # Node
-FROM node:latest as node
+FROM node:latest
 WORKDIR /app
-COPY . .
+COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
-RUN npm start 
-# Java
-FROM openjdk:latest 
-WORKDIR /app
-# Port
+COPY . .
 EXPOSE 3000
+CMD [ "node", "main.js" ]
+# Java
+# FROM eclipse-temurin:latest
