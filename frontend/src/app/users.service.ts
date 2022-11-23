@@ -17,11 +17,4 @@ export class UsersService {
     );
   }
 
-  public getLoggedUserStats(): Observable<any> {
-    return this.http.get(
-      environment.apiUrl + '/users/stats',
-      { responseType: 'json' }
-    );
-  }
-
 }

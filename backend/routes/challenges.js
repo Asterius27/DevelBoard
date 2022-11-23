@@ -62,7 +62,7 @@ router.get('/:title',(req, res) => {
     );
 });
 
-router.get('/',(req, res) => {
+router.get('/',(req, res) => { // TODO test it
     const now=new Date();
     db.executeQuery('MATCH (node:Challenge) WHERE node.expireDate > localdatetime($date) AND NOT exists((:Person {email: $email})-[:RELTYPE]->(node)) RETURN node.title as title, node.expireDate as expireDate, node.language as language',
         {date: now.toISOString().slice(0,-1), email: req.user.email}, 

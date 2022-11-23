@@ -10,10 +10,17 @@ export class LeaderboardsService {
 
   constructor(private http: HttpClient) {}
 
-  public getLeaderboard(id: string): Observable<any> {
+  public getUserStats(): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/leaderboard/' + id, // TODO change it
-      { responseType: 'text' }
+      environment.apiUrl + '/leaderboards/mycompleted',
+      { responseType: 'json' }
+    );
+  }
+
+  public getGeneralLeaderboard(): Observable<any> {
+    return this.http.get(
+      environment.apiUrl + '/leaderboards',
+      { responseType: 'json' }
     );
   }
 }

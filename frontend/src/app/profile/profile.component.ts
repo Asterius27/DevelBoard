@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LeaderboardsService } from '../leaderboards.service';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class ProfileComponent implements OnInit {
   public str_percentage = "";
   public str_percentage_tot = "";
 
-  constructor(private router: Router, private u: UsersService) {}
+  constructor(private router: Router, private u: UsersService, private l: LeaderboardsService) {}
 
   ngOnInit(): void {
     this.load_user();
@@ -30,9 +31,9 @@ export class ProfileComponent implements OnInit {
   }
 
   load_stats() {
-    this.u.getLoggedUserStats().subscribe({
+    this.l.getUserStats().subscribe({
       next: (data) => {
-        let temp = 100 - data.percentage;
+        let temp = 100 - data.percentage; // TODO Round to int
         this.str_percentage = data.percentage + "%";
         this.str_percentage_tot = temp + "%";
         // console.log(this.str_percentage_tot);

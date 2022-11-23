@@ -8,6 +8,8 @@ import { LeaderboardsService } from '../leaderboards.service';
 })
 export class LeaderboardsComponent implements OnInit {
 
+  public leaderboard = [];
+
   constructor(private l: LeaderboardsService) {}
 
   ngOnInit(): void {
@@ -15,9 +17,9 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   load_leaderboard() {
-    this.l.getLeaderboard("id").subscribe({ // TODO change id
+    this.l.getGeneralLeaderboard().subscribe({
       next: (data) => {
-        // TODO load the leaderboard
+        this.leaderboard = data;
       }
     });
   }

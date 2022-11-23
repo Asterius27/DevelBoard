@@ -9,6 +9,7 @@ const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
 const challenges = require('./routes/challenges')
 const users = require('./routes/users')
+const leaderboard = require('./routes/leaderboard')
 const cors = require('cors')
 const pino = require('pino-http')
 
@@ -25,6 +26,7 @@ app.use('/register', register)
 app.use('/evaluate', evaluateCode)
 app.use('/challenges', challenges)
 app.use('/users', users)
+app.use('/leaderboards', leaderboard)
 
 app.listen(port, () => {
     console.log('app listening on port '+port);
