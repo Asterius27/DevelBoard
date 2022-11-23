@@ -33,8 +33,8 @@ export class ProfileComponent implements OnInit {
   load_stats() {
     this.l.getUserStats().subscribe({
       next: (data) => {
-        let temp = 100 - data.percentage; // TODO Round to int
-        this.str_percentage = data.percentage + "%";
+        let temp = 100 - Math.round(data.percentage);
+        this.str_percentage = Math.round(data.percentage) + "%";
         this.str_percentage_tot = temp + "%";
         // console.log(this.str_percentage_tot);
       }

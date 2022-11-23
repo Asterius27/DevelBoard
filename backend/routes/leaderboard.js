@@ -5,8 +5,8 @@ const db = require('../utils/database');
 
 router.use(auth.authenticateToken);
 
-//this gives for each user the percentage of point in all the challenges, even the ones he didin't undertake
-router.get('/', (req, res, next) => { // TODO test it
+//this gives for each user the percentage of point in all the challenges, even the ones he didn't undertake
+router.get('/', (req, res, next) => { // TODO problem with the logic (?)
 
     db.executeQuery("Match (p:Person)-[r:RELTYPE]->(:Challenge) "+
         "Call{ "+
@@ -71,7 +71,7 @@ router.get('/completed', (req, res, next) => { // TODO not tested
     
 });
 //percentage for a single user of the challenges he took
-router.get('/mycompleted', (req, res, next) => { // TODO test it
+router.get('/mycompleted', (req, res, next) => {
 
     db.executeQuery("Match (p:Person{email: $email})-[r:RELTYPE]->(c:Challenge) "+
         "RETURN (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score",

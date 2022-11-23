@@ -12,13 +12,14 @@ export class LeaderboardsComponent implements OnInit {
 
   constructor(private l: LeaderboardsService) {}
 
-  ngOnInit(): void { // TODO test it
+  ngOnInit(): void {
     this.load_leaderboard();
   }
 
   load_leaderboard() {
     this.l.getGeneralLeaderboard().subscribe({
       next: (data) => {
+        // console.log(data);
         this.leaderboard = data;
       }
     });

@@ -25,6 +25,9 @@ router.post('/', async (req, res, next) => {
         }
     );
     let i = 0;
+    if (!fs.existsSync('./submitted_code')) {
+        fs.mkdirSync('./submitted_code');
+    }
     let dirName = "./submitted_code/file"+i;
     let fileName = "temp."+req.body.language;
     while(fs.existsSync(dirName)) {

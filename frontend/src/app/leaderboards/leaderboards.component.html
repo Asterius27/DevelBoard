@@ -10,7 +10,7 @@
       <tr *ngFor="let user of leaderboard; let i = index">
         <th scope="row">{{ i+1 }}</th>
         <td>{{ user['username'] }}</td>
-        <td>{{ user['percentage'] }}</td>
+        <td>{{ user['percentage'] }} %</td>
       </tr>
     </tbody>
 </table>
