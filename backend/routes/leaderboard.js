@@ -13,12 +13,12 @@ router.get('/', (req, res, next) => { // TODO test it
             "Match (c:Challenge) "+
             "Return count(DISTINCT c.title) as number "+
         "} "+
-        "With p.email as email, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
-        "Return email, percentage/number as percent_score",
+        "With p.username as username, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
+        "Return username, percentage/number as percent_score",
         null,
         result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({email: row.get('email'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
             return res.status(200).json(rs);
         },
         error =>{
@@ -36,7 +36,7 @@ router.get('/user', (req, res, next) => { // TODO not tested
             "Match (c:Challenge) "+
             "Return count(DISTINCT c.title) as number "+
         "} "+
-        "With p.email as email, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
+        "With (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
         "RETURN percentage/number as percent_score",
         {email: req.user.email},
         result =>{
@@ -56,11 +56,11 @@ router.get('/user', (req, res, next) => { // TODO not tested
 router.get('/completed', (req, res, next) => { // TODO not tested
 
     db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge) "+
-        "RETURN p.email as email, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score",
+        "RETURN p.username as username, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score",
         null,
         result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({email: row.get('email'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
             return res.status(200).json(rs);
         },
         error =>{
@@ -92,11 +92,11 @@ router.get('/mycompleted', (req, res, next) => { // TODO test it
 router.get('/challenge/:title', (req, res, next) => { // TODO not tested
 
     db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge {title: $title}) "+
-        "RETURN p.email as email, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score",
+        "RETURN p.username as username, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score",
         {title: req.params.title},
         result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({email: row.get('email'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
             return res.status(200).json(rs);
         },
         error =>{
@@ -107,7 +107,7 @@ router.get('/challenge/:title', (req, res, next) => { // TODO not tested
     
 });
 //score of a single user on a single challenge
-router.get('/mychallenge/:title/', (req, res, next) => { // TODO not tested
+router.get('/mychallenge/:title', (req, res, next) => { // TODO not tested
 
     db.executeQuery("Match (p:Person {email: $email})-[r:RELTYPE]->(c:Challenge {title: $title}) "+
         "RETURN (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score",
