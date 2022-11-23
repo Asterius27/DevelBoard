@@ -28,8 +28,8 @@ services:
       context: ./frontend/
       dockerfile: Dockerfile
     ports:
-      - "80:80"
-    hostname: chessdebrieferfrontend
-    container_name: chessdebrieferfrontend
+      - "4200:4200"
+    hostname: develboardfrontend
+    container_name: develboardfrontend
     depends_on:
       - backend

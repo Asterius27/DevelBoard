@@ -18,7 +18,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors());
- app.use(pino());
+app.use(pino());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -30,7 +30,7 @@ app.use('/users', users)
 app.use('/leaderboards', leaderboard)
 
 app.listen(port, async () => {
-    await timeout.setTimeout(120000); // TODO not the best solution, have to wait for db to startup
+    await timeout.setTimeout(60000); // TODO not the best solution, have to wait for db to startup
     console.log('app listening on port '+port);
     db.connectTo(); // TODO create admin account
 

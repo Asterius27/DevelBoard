@@ -61,6 +61,7 @@ router.post('/', async (req, res, next) => {
                         console.log(stderr);
                     }
                     else {
+                        console.log(JSON.stringify(stdout));
                         let out = JSON.stringify(stdout).slice(1, -5); // TODO might be different in linux (docker)
                         let res_out = JSON.stringify(results[i][0]);
                         if (res_out.charAt(0) === '"') {
