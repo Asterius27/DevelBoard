@@ -20,3 +20,9 @@ Node (Backend):
 docker build --tag develboard_backend .
 docker run -d -p 3000:3000 develboard_backend
 ```
+
+Docker Compose:
+```
+docker-compose build
+docker-compose up
+```

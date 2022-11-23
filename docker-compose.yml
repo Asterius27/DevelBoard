@@ -19,6 +19,7 @@ services:
     ports:
       - "3000:3000"
     hostname: develboardbackend
+    container_name: develboardbackend
     depends_on:
       - db
   frontend:
@@ -29,5 +30,6 @@ services:
     ports:
       - "80:80"
     hostname: chessdebrieferfrontend
+    container_name: chessdebrieferfrontend
     depends_on:
       - backend

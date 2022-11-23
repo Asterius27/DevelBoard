@@ -12,6 +12,7 @@ const users = require('./routes/users')
 const leaderboard = require('./routes/leaderboard')
 const cors = require('cors')
 const pino = require('pino-http')
+const timeout = require('timers/promises')
 
 const app = express();
 const port = process.env.PORT;
@@ -28,7 +29,8 @@ app.use('/challenges', challenges)
 app.use('/users', users)
 app.use('/leaderboards', leaderboard)
 
-app.listen(port, () => {
+app.listen(port, async () => {
+    await timeout.setTimeout(120000); // TODO not the best solution, have to wait for db to startup
     console.log('app listening on port '+port);
     db.connectTo(); // TODO create admin account
 
