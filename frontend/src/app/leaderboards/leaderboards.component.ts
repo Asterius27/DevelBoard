@@ -8,11 +8,11 @@ import { LeaderboardsService } from '../leaderboards.service';
 })
 export class LeaderboardsComponent implements OnInit {
 
-  public leaderboard = [];
+  public leaderboard:{username: string, percentage: number}[] = [];
 
   constructor(private l: LeaderboardsService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { // TODO test it
     this.load_leaderboard();
   }
 
