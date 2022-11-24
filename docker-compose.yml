@@ -22,8 +22,6 @@ services:
     container_name: develboardbackend
     depends_on:
       - db
-    volumes:
-      - ./backend:/app
   frontend:
     restart: always
     build:
@@ -35,5 +33,3 @@ services:
     container_name: develboardfrontend
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
