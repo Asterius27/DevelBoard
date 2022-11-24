@@ -10,7 +10,7 @@
       <tr *ngFor="let user of leaderboard; let i = index">
         <th scope="row">{{ i+1 }}</th>
         <td>{{ user['username'] }}</td>
-        <td>{{ Math.round(user['percentage']) }} %</td> <!-- TODO test it -->
+        <td>{{ math.round(user['percentage']) }} %</td>
       </tr>
     </tbody>
 </table>

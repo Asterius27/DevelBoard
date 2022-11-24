@@ -9,6 +9,7 @@ import { LeaderboardsService } from '../leaderboards.service';
 export class LeaderboardsComponent implements OnInit {
 
   public leaderboard:{username: string, percentage: number}[] = [];
+  public math = Math;
 
   constructor(private l: LeaderboardsService) {}
 
