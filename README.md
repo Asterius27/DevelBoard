@@ -1,5 +1,8 @@
 # DevelBoard
-Software Architecture Project. This version of the application is still in beta so some features are limited and/or missing, below is a full list of the limitations and missing functionalities:
+Software Architecture Project. The application is structured in layers, it is divided in frontend (angular), backend (nodejs/express) and database (neo4j). The frontend only communicates with the backend, the backend communicates with the frontend and the database, and the database only communicates with the backend. The application will be built and deployed using docker and the three layers will run in three separate containers, which will communicate as described earlier.
+
+## Limitations
+This version of the application is still in beta so some features are limited and/or missing, below is a full list of the limitations and missing functionalities:
 
 - Edit Profile has not been implemented yet
 - Everyone can create a new challenge, whilst in the final version only admins can create new challenges
@@ -23,9 +26,10 @@ public static void main(String args[]) {
 }
 ```
 
-## Deployment
+## Build and Deploy
 This version of the application can only be run through docker, below are the commands that have to be used to build and run the application. Both commands have to be run in the main folder (where the docker-compose file is located).
 ```
 docker-compose build
 docker-compose up
 ```
+Then the application will be available at localhost:4200
