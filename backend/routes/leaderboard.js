@@ -14,7 +14,8 @@ router.get('/', (req, res, next) => {
             "Return count(DISTINCT c.title) as number "+
         "} "+
         "With p.username as username, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
-        "Return username, percentage/number as percent_score",
+        "Return username, percentage/number as percent_score "+
+        "ORDER BY percent_score DESC",
         null,
         result =>{
             let rs=new Array;
@@ -56,7 +57,8 @@ router.get('/user', (req, res, next) => { // TODO not tested
 router.get('/completed', (req, res, next) => { // TODO not tested
 
     db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge) "+
-        "RETURN p.username as username, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score",
+        "RETURN p.username as username, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score "+
+        "ORDER BY percent_score DESC",
         null,
         result =>{
             let rs=new Array;
@@ -92,7 +94,8 @@ router.get('/mycompleted', (req, res, next) => {
 router.get('/challenge/:title', (req, res, next) => { // TODO not tested
 
     db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge {title: $title}) "+
-        "RETURN p.username as username, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score",
+        "RETURN p.username as username, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score "+
+        "ORDER BY percent_score DESC",
         {title: req.params.title},
         result =>{
             let rs=new Array;
