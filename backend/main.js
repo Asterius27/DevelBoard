@@ -31,7 +31,7 @@ app.use('/leaderboards', leaderboard)
 
 app.listen(port, async () => {
     console.log('Starting...');
-    await timeout.setTimeout(60000); // TODO not the best solution, have to wait for db to startup
+    await timeout.setTimeout(40000); // TODO not the best solution, have to wait for db to startup
     console.log('app listening on port '+port);
     db.connectTo(); // TODO create admin account
 
