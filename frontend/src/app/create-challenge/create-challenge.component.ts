@@ -48,7 +48,7 @@ export class CreateChallengeComponent implements OnInit {
 
   submit() {
     let temp:string[] = this.createChallengeForm.get('expireDate')!.value.split('-');
-    let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; ');
+    let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; '); // TODO add regexp check
     let results:string[] = this.createChallengeForm.get('resultCases')!.value.split('; ');
     let time:string[] = this.createChallengeForm.get('expireTime')!.value.split(':');
     if (tests.length === results.length && this.createChallengeForm.get('language')!.value !== "") {
