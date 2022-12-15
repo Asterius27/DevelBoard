@@ -4,6 +4,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const db = require('./utils/database');
+const broker = require('./utils/broker');
 const login = require('./routes/login') 
 const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
@@ -33,6 +34,7 @@ app.listen(port, async () => {
     console.log('Starting...');
     await timeout.setTimeout(40000); // TODO not the best solution, have to wait for db to startup
     console.log('app listening on port '+port);
+    broker.create();
     db.connectTo(); // TODO create admin account
 
     db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',
@@ -45,5 +47,5 @@ app.listen(port, async () => {
         null,
         result => {console.log("Constraint on Challenge created in the DB")},
         error => {console.log(error)}
-    )
+    );
 });
