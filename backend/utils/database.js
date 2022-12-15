@@ -7,7 +7,7 @@ let session = {};
 
 function connectTo(){
     driver = neo4j.driver(
-        'bolt://develboarddatabase:7687/',
+        'bolt://localhost:7687/',
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
     );
     // console.log("connected!");
