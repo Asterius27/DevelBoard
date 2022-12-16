@@ -35,6 +35,9 @@ app.listen(port, async () => {
     await timeout.setTimeout(40000); // TODO not the best solution, have to wait for db to startup
     console.log('app listening on port '+port);
     broker.create();
+
+    await broker.createTopics('addUser', 1);
+
     db.connectTo(); // TODO create admin account
 
     db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',

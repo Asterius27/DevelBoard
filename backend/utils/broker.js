@@ -1,17 +1,20 @@
 const { Kafka, logLevel } = require('kafkajs')
 
 let kafka = {}
+let producer = {}
+let admin = {}
 
 function create() {
     kafka = new Kafka({
-        logLevel: logLevel.DEBUG,
+        logLevel: logLevel.INFO,
         clientId: 'express',
         brokers: [process.env.KAFKA_HOST + ':9092'],
     })
+    admin = kafka.admin()
+    producer = kafka.producer()
 }
 
 async function sendMessage(topic, messages) {
-    let producer = kafka.producer()
     await producer.connect()
     await producer.send({
         topic: topic, // 'test-topic'
@@ -20,10 +23,24 @@ async function sendMessage(topic, messages) {
     await producer.disconnect()
 }
 
+async function receiveMessage(groupId, topic) { // TODO probably doesn't wait for res
+    let res = ""
+    const consumer = kafka.consumer({ groupId: groupId })
+    await consumer.connect()
+    await consumer.subscribe({ topic: topic, fromBeginning: true })
+    await consumer.run({
+        eachMessage: async ({ topic, partition, message }) => {
+            res = message.value.toString()
+            // await consumer.stop() probably doesn't exist
+            await consumer.disconnect()
+        },
+    })
+    return res
+}
+
 async function createTopics(topic, numPartitions) {
-    let admin = kafka.admin()
     await admin.connect()
-    await admin.createTopics({
+    let temp = await admin.createTopics({
         topics: [
             {
                 topic: topic, // String
@@ -31,11 +48,11 @@ async function createTopics(topic, numPartitions) {
             },
         ],
     })
+    console.log(temp)
     await admin.disconnect()
 }
 
 async function deleteTopics(topics) {
-    let admin = kafka.admin()
     await admin.connect()
     await admin.deleteTopics({
         topics: topics, // String[]
@@ -43,4 +60,4 @@ async function deleteTopics(topics) {
     await admin.disconnect()
 }
 
-module.exports = { create, sendMessage, createTopics, deleteTopics }
+module.exports = { create, sendMessage, createTopics, deleteTopics, receiveMessage }
