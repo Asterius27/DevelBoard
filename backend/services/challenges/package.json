@@ -1,0 +1,20 @@
+{
+  "name": "challenges-service",
+  "version": "1.0.0",
+  "description": "challenges service with kafka consumer",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js | pino-pretty",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "pino-pretty": "^9.1.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "kafkajs": "^2.2.3",
+    "neo4j-driver": "^5.3.0"
+  }
+}
