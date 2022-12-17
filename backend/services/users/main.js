@@ -10,7 +10,8 @@ const kafka = new Kafka({
     brokers: [process.env.KAFKA_HOST + ':9092'],
 })
 
-const consumer = kafka.consumer({ groupId: 'addUser-consumer' })
+const addUserConsumer = kafka.consumer({ groupId: 'addUser-consumer' })
+const loginConsumer = kafka.consumer({ groupId: 'login-consumer' })
 async function response(topic, messages) {
   let producer = kafka.producer()
   await producer.connect()
@@ -21,13 +22,13 @@ async function response(topic, messages) {
   await producer.disconnect()
 }
 
-async function service() {
-  await consumer.connect()
-  await consumer.subscribe({ topic: 'addUser', fromBeginning: true })
-  await consumer.run({
+async function registerConsumer() {
+  await addUserConsumer.connect()
+  await addUserConsumer.subscribe({ topic: 'addUser', fromBeginning: true })
+  await addUserConsumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       let user = JSON.parse(message.value.toString())
-      console.log(user)
+      // console.log(user)
       db.executeQuery(
         'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
         {email: user.email, salt:user.salt, digest:user.digest, name:user.name, role:user.role, username:user.username, surname:user.surname},
@@ -53,4 +54,34 @@ async function service() {
   })
 }
 
-service();
+async function signInConsumer() {
+  await loginConsumer.connect()
+  await loginConsumer.subscribe({ topic: 'loginUser', fromBeginning: true })
+  await loginConsumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      let data = JSON.parse(message.value.toString())
+      db.executeQuery(
+        'MATCH (node:Person {email: $email}) return node',
+        {email: data.email},
+        result => {
+          if (!result) {
+            response(data.response, [{value: 'Invalid User'}])
+          }
+          else {
+            let user = result.records[0].get(0)
+            // console.log(user.properties)
+            let msg = JSON.stringify(user.properties)
+            response(data.response, [{value: msg}])
+          }
+        },
+        error => {
+          console.log("DB Error: " + error)
+          response(data.response, [{value: ''}])
+        }
+      );
+    },
+  })
+}
+
+registerConsumer();
+signInConsumer();

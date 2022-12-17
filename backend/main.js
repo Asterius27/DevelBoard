@@ -37,6 +37,7 @@ app.listen(port, async () => {
     broker.create();
 
     await broker.createTopics('addUser', 1);
+    await broker.createTopics('loginUser', 1);
 
     db.connectTo(); // TODO create admin account
 

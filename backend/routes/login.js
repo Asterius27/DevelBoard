@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const dotenv = require('dotenv');
 const passport = require('passport');
 const passportHTTP = require('passport-http');
-const db = require('../utils/database');
+const broker = require('../utils/broker');
 const auth = require('../utils/auth');
 const crypto = require('crypto');
-dotenv.config();
 
 function validatePassword(user, pwd){
 	let hmac = crypto.createHmac('sha512', user.salt);
@@ -16,30 +14,32 @@ function validatePassword(user, pwd){
 }
 
 passport.use(new passportHTTP.BasicStrategy(
-	function(email, password, done) {
+	async function(email, password, done) {
 		// console.log(email, password)
-		db.executeQuery(
-			'MATCH (node:Person {email: $email}) return node',
-			{email: email},
-			result => {
-				if (!result) {
-					// console.log(result)
-					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})}
-				else {
-					let user = result.records[0].get(0)
-					// console.log(user.properties)
-					if (validatePassword(user.properties, password)) { 
-						return done(null, user.properties);
-					}
-					else{
-						return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"})
-					}
-				}
-			},
-			error => {
+		let topic = email.split('@').join('')
+		let msg = JSON.stringify({email: email, response: topic})
+		await broker.createTopics(topic, 1);
+		broker.sendMessage('loginUser', [{value: msg}])
+		let promise = broker.receiveMessage(topic, topic)
+		promise.then(async (data) => {
+			await data.consumer.disconnect()
+			broker.deleteTopics([topic])
+			if (data.msg === "") {
 				return done({statusCode: 500, error: true, errormessage: error})
 			}
-		);
+			if (data.msg === "Invalid User") {
+				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})
+			}
+			if (data.msg !== "" && data.msg !== "Invalid User") {
+				let user = JSON.parse(data.msg)
+				if (validatePassword(user, password)) { 
+					return done(null, user);
+				}
+				else{
+					return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid password"})
+				}
+			}
+		})
 	}
 ));
 

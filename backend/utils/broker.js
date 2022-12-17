@@ -1,8 +1,6 @@
 const { Kafka, logLevel } = require('kafkajs')
 
 let kafka = {}
-let producer = {}
-let admin = {}
 
 function create() {
     kafka = new Kafka({
@@ -10,11 +8,10 @@ function create() {
         clientId: 'express',
         brokers: [process.env.KAFKA_HOST + ':9092'],
     })
-    admin = kafka.admin()
-    producer = kafka.producer()
 }
 
 async function sendMessage(topic, messages) {
+    const producer = kafka.producer()
     await producer.connect()
     await producer.send({
         topic: topic, // 'test-topic'
@@ -39,6 +36,7 @@ async function receiveMessage(groupId, topic) {
 }
 
 async function createTopics(topic, numPartitions) {
+    const admin = kafka.admin()
     await admin.connect()
     let temp = await admin.createTopics({
         topics: [
@@ -53,6 +51,7 @@ async function createTopics(topic, numPartitions) {
 }
 
 async function deleteTopics(topics) {
+    const admin = kafka.admin()
     await admin.connect()
     await admin.deleteTopics({
         topics: topics, // String[]

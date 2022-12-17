@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../utils/auth');
-const db = require('../utils/database');
 
 router.use(auth.authenticateToken);
 

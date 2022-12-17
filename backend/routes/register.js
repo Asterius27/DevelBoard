@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router()
-const db = require('../utils/database');
 const broker = require('../utils/broker');
 const auth = require('../utils/auth');
 const crypto = require('crypto');
@@ -34,7 +33,7 @@ router.post('/', async function (req, res, next) {
 		broker.sendMessage('addUser', [{value: message}]);
 		let promise = broker.receiveMessage(topic, topic)
 		promise.then(async (data) => {
-			console.log("PROMISE RESOLVED: " + data.msg)
+			// console.log("PROMISE RESOLVED: " + data.msg)
 			await data.consumer.disconnect()
 			broker.deleteTopics([topic])
 			if (data.msg === "") {
