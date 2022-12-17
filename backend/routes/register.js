@@ -14,6 +14,7 @@ function createPassword(pwd){
 }
 
 router.post('/', async function (req, res, next) {
+	let topic = req.body.email.split('@').join('')
 	let user = {
 		email: req.body.email,
 		password: req.body.password, 
@@ -21,7 +22,7 @@ router.post('/', async function (req, res, next) {
 		role: req.body.role,
 		username: req.body.username,
 		surname: req.body.surname,
-		response: req.body.email
+		response: topic
 	}
 	// console.log(user);
 	if (user.email && user.password && user.name && user.username && user.surname) {
@@ -29,23 +30,25 @@ router.post('/', async function (req, res, next) {
 		user['salt'] = salt
 		user['digest'] = digest
 		let message = JSON.stringify(user)
-		await broker.createTopics(user.email, 1); // TODO invalid user exception with mario.rossi@gmail.com, probably @ is the problem
+		await broker.createTopics(topic, 1);
 		broker.sendMessage('addUser', [{value: message}]);
-		let promise = broker.receiveMessage(user.email, user.email)
-		promise.then((token_data) => {
-			broker.deleteTopics([user.email])
-			if (token_data === "") {
-				console.log("DB Error: " + error)
+		let promise = broker.receiveMessage(topic, topic)
+		promise.then(async (data) => {
+			console.log("PROMISE RESOLVED: " + data.msg)
+			await data.consumer.disconnect()
+			broker.deleteTopics([topic])
+			if (data.msg === "") {
+				console.log("DB Error")
 				return res.sendStatus(500)
 			}
 			else {
-				let token = auth.generateAccessToken(JSON.parse(token_data))
+				let token = auth.generateAccessToken(JSON.parse(data.msg))
 				return res.json({token: token})
 			}
 		})
 	}
-	else{
-		console.log("Request Error: " + error)
+	else {
+		console.log("Request Error")
 		return res.sendStatus(404)
 	}
 });

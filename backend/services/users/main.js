@@ -28,7 +28,6 @@ async function service() {
     eachMessage: async ({ topic, partition, message }) => {
       let user = JSON.parse(message.value.toString())
       console.log(user)
-      
       db.executeQuery(
         'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
         {email: user.email, salt:user.salt, digest:user.digest, name:user.name, role:user.role, username:user.username, surname:user.surname},
@@ -43,11 +42,11 @@ async function service() {
             role: dbuser.properties.role
           }
           let message = JSON.stringify(token_data);
-          response(user.email, [{value: message}])
+          response(user.response, [{value: message}])
         },
         error => {
           console.log("DB Error: " + error)
-          response(user.email, [{value: ''}])
+          response(user.response, [{value: ''}])
         }
       );
     },

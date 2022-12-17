@@ -23,19 +23,19 @@ async function sendMessage(topic, messages) {
     await producer.disconnect()
 }
 
-async function receiveMessage(groupId, topic) { // TODO probably doesn't wait for res
-    let res = ""
+async function receiveMessage(groupId, topic) {
     const consumer = kafka.consumer({ groupId: groupId })
     await consumer.connect()
     await consumer.subscribe({ topic: topic, fromBeginning: true })
-    await consumer.run({
-        eachMessage: async ({ topic, partition, message }) => {
-            res = message.value.toString()
-            // await consumer.stop() probably doesn't exist
-            await consumer.disconnect()
-        },
+    const res = new Promise(async (resolve, reject) => {
+        await consumer.run({
+            eachMessage: async ({ topic, partition, message }) => {
+                // console.log("TOKEN: " + message.value.toString())
+                resolve({msg: message.value.toString(), consumer: consumer})
+            },
+        })
     })
-    return res
+    return res;
 }
 
 async function createTopics(topic, numPartitions) {
