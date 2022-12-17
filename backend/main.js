@@ -36,11 +36,12 @@ app.listen(port, async () => {
     console.log('app listening on port '+port);
     broker.create();
 
-    await broker.createTopics('addUser', 1);
+    await broker.createTopics('addUser', 1); // TODO try to increase the partitions and the consumers
     await broker.createTopics('loginUser', 1);
     await broker.createTopics('createChallenge', 1);
     await broker.createTopics('getTitleChallenge', 1);
     await broker.createTopics('getChallenge', 1);
+    await broker.createTopics('evaluateCode', 1);
 
     db.connectTo(); // TODO create admin account
 
