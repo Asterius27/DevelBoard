@@ -84,7 +84,7 @@ ready.then(() => {
                 }
                 else {
                   // console.log(JSON.stringify(stdout));
-                  let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
+                  let out = JSON.stringify(stdout).slice(1, -3); // TODO -5 for windows, -3 for linux
                   let res_out = JSON.stringify(results[i][0]);
                   if (res_out.charAt(0) === '"') {
                     res_out = res_out.slice(1, -1);
