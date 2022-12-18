@@ -11,8 +11,6 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^8.5.1",
     "kafkajs": "^2.2.3",
-    "neo4j-driver": "^5.2.0",
-    "neode": "^0.4.8",
     "passport": "^0.6.0",
     "passport-http": "^0.3.0",
     "pino-http": "^8.2.1"

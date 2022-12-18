@@ -1,7 +1,7 @@
 {
-  "name": "challenges-service",
+  "name": "leaderboards-service",
   "version": "1.0.0",
-  "description": "challenges service with kafka consumer",
+  "description": "leaderboards service with kafka consumer",
   "main": "main.js",
   "scripts": {
     "start": "node main.js | pino-pretty",

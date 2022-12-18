@@ -36,10 +36,13 @@ app.listen(port, async () => {
 
     await broker.createTopics('addUser', 1); // TODO try to increase the partitions and the consumers
     await broker.createTopics('loginUser', 1);
+
     await broker.createTopics('createChallenge', 1);
     await broker.createTopics('getTitleChallenge', 1);
     await broker.createTopics('getChallenge', 1);
+
     await broker.createTopics('evaluateCode', 1);
+    
     await broker.createTopics('getGeneralLeaderboard', 1);
     await broker.createTopics('getGeneralUserLeaderboard', 1);
     await broker.createTopics('getLeaderboard', 1);

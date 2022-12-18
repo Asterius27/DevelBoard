@@ -11,7 +11,7 @@ ready.then(() => {
   const kafka = new Kafka({
       logLevel: logLevel.INFO,
       clientId: 'evaluateCode-service',
-      brokers: [process.env.KAFKA_HOST + ':9092'],
+      brokers: [process.env.KAFKA_HOST + ':' + process.env.KAFKA_PORT],
   })
 
   const evaluateCodeConsumer = kafka.consumer({ groupId: 'evaluateCode-consumer' })

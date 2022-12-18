@@ -8,7 +8,7 @@ ready.then(() => {
   const kafka = new Kafka({
       logLevel: logLevel.INFO,
       clientId: 'leaderboards-service',
-      brokers: [process.env.KAFKA_HOST + ':9092'],
+      brokers: [process.env.KAFKA_HOST + ':' + process.env.KAFKA_PORT],
   })
 
   const getGeneralLeaderboardConsumer = kafka.consumer({ groupId: 'getGeneralLeaderboard-consumer' })
