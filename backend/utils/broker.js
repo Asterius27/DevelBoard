@@ -46,7 +46,7 @@ async function createTopics(topic, numPartitions) {
             },
         ],
     })
-    console.log(temp)
+    // console.log(temp)
     await admin.disconnect()
 }
 

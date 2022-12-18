@@ -1,9 +1,7 @@
 //https://neo4j.com/developer/js-movie-app/
 //https://getpino.io/#/docs/web?id=express
 const express = require('express');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const db = require('./utils/database');
 const broker = require('./utils/broker');
 const login = require('./routes/login') 
 const register = require('./routes/register')
@@ -32,7 +30,7 @@ app.use('/leaderboards', leaderboard)
 
 app.listen(port, async () => {
     console.log('Starting...');
-    await timeout.setTimeout(1000); // TODO not the best solution (40000), have to wait for db to startup
+    await timeout.setTimeout(1000); // TODO not the best solution (40000), have to wait for kafka to startup
     console.log('app listening on port '+port);
     broker.create();
 
@@ -42,18 +40,10 @@ app.listen(port, async () => {
     await broker.createTopics('getTitleChallenge', 1);
     await broker.createTopics('getChallenge', 1);
     await broker.createTopics('evaluateCode', 1);
-
-    db.connectTo(); // TODO create admin account
-
-    db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',
-        null,
-        result => {console.log("Constraint on Person created in the DB")},
-        error => {console.log(error)}
-    );
-
-    db.executeQuery('CREATE CONSTRAINT unique_challenge IF NOT EXISTS FOR (chall:Challenge) REQUIRE chall.title IS UNIQUE',
-        null,
-        result => {console.log("Constraint on Challenge created in the DB")},
-        error => {console.log(error)}
-    );
+    await broker.createTopics('getGeneralLeaderboard', 1);
+    await broker.createTopics('getGeneralUserLeaderboard', 1);
+    await broker.createTopics('getLeaderboard', 1);
+    await broker.createTopics('getUserLeaderboard', 1);
+    await broker.createTopics('getChallengeLeaderboard', 1);
+    await broker.createTopics('getUserChallengeScore', 1);
 });

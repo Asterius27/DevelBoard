@@ -1,11 +1,13 @@
 //https://github.com/neo4j/neo4j-javascript-driver
 //docker run -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/s3cr3t neo4j
 const neo4j = require('neo4j-driver');
+const timeout = require('timers/promises')
 
 let driver = {};
 let session = {};
 
-function connectTo(){
+async function connectTo(){
+    await timeout.setTimeout(1000); // TODO not the best solution (40000), have to wait for db and kafka to startup
     driver = neo4j.driver(
         'bolt://' + process.env.NEO4J_HOST + ':7687/',
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
