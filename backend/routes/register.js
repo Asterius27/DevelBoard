@@ -13,7 +13,7 @@ function createPassword(pwd){
 }
 
 router.post('/', async function (req, res, next) {
-	let topic = req.body.email.split('@').join('')
+	let topic = req.body.email.split('@').join('') + 'register'
 	let user = {
 		email: req.body.email,
 		password: req.body.password, 

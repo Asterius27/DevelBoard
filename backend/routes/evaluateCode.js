@@ -6,7 +6,7 @@ const broker = require('../utils/broker');
 router.use(auth.authenticateToken);
 
 router.post('/', async (req, res, next) => {
-    let topic = req.user.email.split('@').join('')
+    let topic = req.user.email.split('@').join('') + 'evaluatecode'
     let msg = JSON.stringify({
         title: req.body.title, 
         language: req.body.language, 

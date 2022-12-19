@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:title', async (req, res) => {
-    let topic = req.user.email.split('@').join('')
+    let topic = req.user.email.split('@').join('') + 'challengetitle'
     let msg = JSON.stringify({title: req.params.title, response: topic})
     await broker.createTopics(topic, 1);
     broker.sendMessage('getTitleChallenge', [{value: msg}])
@@ -42,7 +42,7 @@ router.get('/:title', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    let topic = req.user.email.split('@').join('')
+    let topic = req.user.email.split('@').join('') + 'challenge'
     let msg = JSON.stringify({email: req.user.email, response: topic})
     await broker.createTopics(topic, 1);
     broker.sendMessage('getChallenge', [{value: msg}])

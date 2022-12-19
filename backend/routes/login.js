@@ -16,7 +16,7 @@ function validatePassword(user, pwd){
 passport.use(new passportHTTP.BasicStrategy(
 	async function(email, password, done) {
 		// console.log(email, password)
-		let topic = email.split('@').join('')
+		let topic = email.split('@').join('') + 'login'
 		let msg = JSON.stringify({email: email, response: topic})
 		await broker.createTopics(topic, 1);
 		broker.sendMessage('loginUser', [{value: msg}])
