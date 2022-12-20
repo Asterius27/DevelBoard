@@ -48,7 +48,7 @@ router.get('/user', async (req, res, next) => {
 });
 
 //percentage score for all users on the challenge they took, not the ones they didn't
-router.get('/completed', async (req, res, next) => { // TODO not tested
+router.get('/completed', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleted'
     let msg = JSON.stringify({response: topic})
     await broker.createTopics(topic, 1);

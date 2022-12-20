@@ -74,7 +74,6 @@ ready.then(() => {
           result =>{
             let rs;
             result.records.forEach(row => rs=row.get('percent_score'));
-            // console.log(rs);
             let message = JSON.stringify({percentage: rs})
             response(msg.response, [{value: message}])
           },

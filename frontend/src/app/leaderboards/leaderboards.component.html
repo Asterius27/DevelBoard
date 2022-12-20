@@ -1,4 +1,15 @@
-<table class="table table-hover">
+<div style="padding-top: 2%">
+  <ul class="nav nav-tabs">
+      <li class="nav-item">
+          <a class="nav-link active previous-tab" aria-current="page" href="#" (click)="setTabs(1, $event);">General Leaderboard</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#" (click)="setTabs(2, $event);">Only Undertaken Challenges Leaderboard</a>
+      </li>
+  </ul>
+</div>
+
+<table class="table table-hover" [hidden]="!(tabs===1)">
     <thead class="thead-dark">
       <tr>
         <th scope="col">#</th>
@@ -7,10 +18,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of leaderboard; let i = index">
+      <tr class="clickable-row" *ngFor="let user of generalLeaderboard; let i = index" (click)="openProfile(user);">
         <th scope="row">{{ i+1 }}</th>
         <td>{{ user['username'] }}</td>
         <td>{{ math.round(user['percentage']) }} %</td>
       </tr>
     </tbody>
+</table>
+
+<table class="table table-hover" [hidden]="!(tabs===2)">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="clickable-row" *ngFor="let user of leaderboard; let i = index" (click)="openProfile(user);">
+      <th scope="row">{{ i+1 }}</th>
+      <td>{{ user['username'] }}</td>
+      <td>{{ math.round(user['percentage']) }} %</td>
+    </tr>
+  </tbody>
 </table>
