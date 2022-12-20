@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import jwtDecode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +61,18 @@ export class AuthenticationService {
 
   public getToken(): string | null {
     return this.isLoggedIn() ? localStorage.getItem(this.tokenKey) : null;
+  }
+
+  public getUser(): any {
+    return jwtDecode(this.getToken()!);
+  }
+
+  public isAdmin(): Boolean {
+    if (this.getUser().role === "ADMIN") {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

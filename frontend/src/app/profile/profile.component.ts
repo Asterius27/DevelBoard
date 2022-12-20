@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../authentication.service';
 import { LeaderboardsService } from '../leaderboards.service';
-import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,24 +10,14 @@ import { UsersService } from '../users.service';
 })
 export class ProfileComponent implements OnInit {
 
-  public user: {[k: string]: any} = {}
+  public user: {[k: string]: any} = this.auth.getUser();
   public str_percentage = "";
   public str_percentage_tot = "";
 
-  constructor(private router: Router, private u: UsersService, private l: LeaderboardsService) {}
+  constructor(private router: Router, private auth: AuthenticationService, private l: LeaderboardsService) {}
 
   ngOnInit(): void {
-    this.load_user();
     this.load_stats();
-  }
-
-  load_user() {
-    this.u.getLoggedUser().subscribe({
-      next: (data) => {
-        this.user = data;
-        // console.log(data);
-      }
-    });
   }
 
   load_stats() {

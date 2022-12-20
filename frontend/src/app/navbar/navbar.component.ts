@@ -9,6 +9,7 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class NavbarComponent implements OnInit {
 
+  public admin:Boolean = this.auth.isAdmin();
   constructor(private router: Router, private auth: AuthenticationService) {}
 
   ngOnInit(): void {}

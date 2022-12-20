@@ -19,7 +19,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'leaderboards', component: LeaderboardsComponent, canActivate: [AuthGuard]},
   {path: 'editprofile', component: EditProfileComponent, canActivate: [AuthGuard]},
-  {path: 'createchallenge', component: CreateChallengeComponent} // canActivate: [AuthGuard]
+  {path: 'createchallenge', component: CreateChallengeComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

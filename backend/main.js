@@ -7,7 +7,6 @@ const login = require('./routes/login')
 const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
 const challenges = require('./routes/challenges')
-const users = require('./routes/users')
 const leaderboard = require('./routes/leaderboard')
 const cors = require('cors')
 const pino = require('pino-http')
@@ -25,12 +24,11 @@ app.use('/login', login)
 app.use('/register', register)
 app.use('/evaluate', evaluateCode)
 app.use('/challenges', challenges)
-app.use('/users', users)
 app.use('/leaderboards', leaderboard)
 
 app.listen(port, async () => {
     console.log('Starting...');
-    await timeout.setTimeout(20000); // TODO not the best solution (40000), have to wait for kafka to startup
+    await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for kafka to startup
     console.log('app listening on port '+port);
     broker.create();
 

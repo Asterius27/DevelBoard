@@ -10,11 +10,4 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
-  public getLoggedUser(): Observable<any> {
-    return this.http.get(
-      environment.apiUrl + '/users',
-      { responseType: 'json' }
-    );
-  }
-
 }
