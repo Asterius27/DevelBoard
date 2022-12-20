@@ -4,10 +4,9 @@ const neo4j = require('neo4j-driver');
 const timeout = require('timers/promises')
 
 let driver = {};
-let session = {};
 
 async function connectTo(){
-    await timeout.setTimeout(20000); // TODO not the best solution (40000), have to wait for db and kafka to startup
+    await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for db and kafka to startup
     driver = neo4j.driver(
         'bolt://' + process.env.NEO4J_HOST + ':' + process.env.NEO4J_PORT + '/',
         neo4j.auth.basic(process.env.NEO4J_DATABASE, process.env.NEO4J_PASSWORD)
@@ -16,7 +15,7 @@ async function connectTo(){
 }
 
 async function executeQuery(query, params, fun, errFun){
-    session= await driver.session();
+    let session= await driver.session();
     if (session) {
         await session.run(query, params)
         .then(fun)

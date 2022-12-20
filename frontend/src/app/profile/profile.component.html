@@ -23,9 +23,15 @@
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="lead fw-normal mb-0">Statistics</p>
               </div>
+              <p class="mb-1">Percentage using only the challenges you did</p>
               <div class="progress" style="height: 2vw;">
                 <div class="progress-bar bg-success" role="progressbar" [ngStyle]="{'width': str_percentage}" aria-valuemin="0" aria-valuemax="100">{{ str_percentage }}</div>
                 <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="{'width': str_percentage_tot}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <p class="mb-1" style="margin-top: 2%;">Percentage using every challenge</p>
+              <div class="progress" style="height: 2vw;">
+                <div class="progress-bar bg-success" role="progressbar" [ngStyle]="{'width': str_general_percentage}" aria-valuemin="0" aria-valuemax="100">{{ str_general_percentage }}</div>
+                <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="{'width': str_general_percentage_tot}" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>

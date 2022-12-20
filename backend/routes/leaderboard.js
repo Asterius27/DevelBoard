@@ -27,7 +27,7 @@ router.get('/', async (req, res, next) => {
 });
 
 //like the one above but for only 1 user
-router.get('/user', async (req, res, next) => { // TODO not tested
+router.get('/user', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboarduser'
     let msg = JSON.stringify({email: req.user.email, response: topic})
     await broker.createTopics(topic, 1);

@@ -10,6 +10,13 @@ export class LeaderboardsService {
 
   constructor(private http: HttpClient) {}
 
+  public getLeaderboard(): Observable<any> {
+    return this.http.get(
+      environment.apiUrl + '/leaderboards/completed',
+      { responseType: 'json' }
+    );
+  }
+
   public getUserStats(): Observable<any> {
     return this.http.get(
       environment.apiUrl + '/leaderboards/mycompleted',
@@ -23,4 +30,12 @@ export class LeaderboardsService {
       { responseType: 'json' }
     );
   }
+
+  public getGeneralUserStats(): Observable<any> {
+    return this.http.get(
+      environment.apiUrl + '/leaderboards/user',
+      { responseType: 'json' }
+    );
+  }
+
 }
