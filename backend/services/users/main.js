@@ -1,14 +1,32 @@
 const { Kafka, logLevel } = require('kafkajs')
 require('dotenv').config();
-const db = require('./database')
+const db = require('./database');
+const crypto = require('crypto');
 
 console.log('Starting...');
-let ready = db.connectTo() // TODO create admin account
-ready.then(() => {
-  db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',
+let ready = db.connectTo()
+ready.then(async () => {
+  await db.executeQuery('CREATE CONSTRAINT unique_user IF NOT EXISTS FOR (user:Person) REQUIRE user.email IS UNIQUE',
     null,
-    result => {console.log("Constraint on Person created in the DB")},
+    result => {
+      console.log("Constraint on Person created in the DB")
+    },
     error => {console.log(error)}
+  );
+
+  let salt = crypto.randomBytes(16).toString('hex');
+  let hmac = crypto.createHmac('sha512', salt);
+  hmac.update(process.env.ADMIN_PASSWORD);
+	let digest = hmac.digest('hex');
+  await db.executeQuery(
+    'MERGE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname})', 
+    {email: process.env.ADMIN_EMAIL, salt:salt, digest:digest, name:process.env.ADMIN_NAME, role:"ADMIN", username:process.env.ADMIN_USERNAME, surname:process.env.ADMIN_SURNAME},
+    result => {
+      console.log("Admin account created");
+    },
+    error => {
+      console.log(error)
+    }
   );
 
   const kafka = new Kafka({
