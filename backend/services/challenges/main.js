@@ -20,6 +20,7 @@ ready.then(() => {
   const createChallengeConsumer = kafka.consumer({ groupId: 'createChallenge-consumer' })
   const getTitleChallengeConsumer = kafka.consumer({ groupId: 'getTitleChallenge-consumer' })
   const getChallengeConsumer = kafka.consumer({ groupId: 'getChallenge-consumer' })
+  const getLastChallengeConsumer = kafka.consumer({ groupId: 'getLastChallenge-consumer' })
   async function response(topic, messages) {
     let producer = kafka.producer()
     await producer.connect()
@@ -60,9 +61,13 @@ ready.then(() => {
           {title: msg.title},
           result => {
             let challenge;
-            result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": db.dateParse(chall.get("expireDate")), language: chall.get('language'), description: chall.get('description')}); //rivedi la data così non va
+            result.records.forEach(chall => challenge={"title": chall.get("title"), "expireDate": db.dateParse(chall.get("expireDate")), language: chall.get('language'), description: chall.get('description')});
             let message = JSON.stringify(challenge)
-            response(msg.response, [{value: message}])
+            if (message) {
+              response(msg.response, [{value: message}])
+            } else {
+              response(msg.response, [{value: JSON.stringify({'title': 'no challenge found'})}])
+            }
           },
           error => {
             console.log("DB Error: " + error)
@@ -84,7 +89,31 @@ ready.then(() => {
           {date: now.toISOString().slice(0,-1), email: msg.email}, 
           result => {
             let challenges=new Array;
-            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')})); //rivedi la data così non va
+            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')}));
+            let message = JSON.stringify(challenges)
+            response(msg.response, [{value: message}])
+          },
+          error => {
+            console.log("DB Error: " + error)
+            response(msg.response, [{value: ''}])
+          }
+        );
+      },
+    })
+  }
+
+  async function getLastConsumer() {
+    await getLastChallengeConsumer.connect()
+    await getLastChallengeConsumer.subscribe({ topic: 'getLastChallenge', fromBeginning: true })
+    await getLastChallengeConsumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let msg = JSON.parse(message.value.toString())
+        const now = new Date();
+        db.executeQuery('MATCH (node:Challenge) RETURN node.title as title, node.expireDate as expireDate, node.language as language ORDER BY node.expireDate LIMIT 15',
+          {date: now.toISOString().slice(0,-1)}, 
+          result => {
+            let challenges=new Array;
+            result.records.forEach(chall =>challenges.push({title: chall.get('title'), expireDate: db.dateParse(chall.get('expireDate')), language: chall.get('language')}));
             let message = JSON.stringify(challenges)
             response(msg.response, [{value: message}])
           },
@@ -100,4 +129,5 @@ ready.then(() => {
   createConsumer();
   getTitleConsumer();
   getConsumer();
+  getLastConsumer();
 })

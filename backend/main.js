@@ -31,20 +31,22 @@ app.listen(port, async () => {
     await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for kafka to startup
     console.log('app listening on port '+port);
     broker.create();
+    // await broker.cleanUp();
 
-    await broker.createTopics('addUser', 1); // TODO try to increase the partitions and the consumers
-    await broker.createTopics('loginUser', 1);
+    await broker.createTopics('addUser', process.env.KAFKA_USER_CONSUMER); // TODO try to increase the partitions and the consumers
+    await broker.createTopics('loginUser', process.env.KAFKA_USER_CONSUMER);
 
-    await broker.createTopics('createChallenge', 1);
-    await broker.createTopics('getTitleChallenge', 1);
-    await broker.createTopics('getChallenge', 1);
+    await broker.createTopics('createChallenge', process.env.KAFKA_CHALLENGE_CONSUMER);
+    await broker.createTopics('getTitleChallenge', process.env.KAFKA_CHALLENGE_CONSUMER);
+    await broker.createTopics('getChallenge', process.env.KAFKA_CHALLENGE_CONSUMER);
+    await broker.createTopics('getLastChallenge', process.env.KAFKA_CHALLENGE_CONSUMER);
 
-    await broker.createTopics('evaluateCode', 1);
+    await broker.createTopics('evaluateCode', process.env.KAFKA_CODE_EVALUATION_CONSUMER);
     
-    await broker.createTopics('getGeneralLeaderboard', 1);
-    await broker.createTopics('getGeneralUserLeaderboard', 1);
-    await broker.createTopics('getLeaderboard', 1);
-    await broker.createTopics('getUserLeaderboard', 1);
-    await broker.createTopics('getChallengeLeaderboard', 1);
-    await broker.createTopics('getUserChallengeScore', 1);
+    await broker.createTopics('getGeneralLeaderboard', process.env.KAFKA_LEADERBOARD_CONSUMER);
+    await broker.createTopics('getGeneralUserLeaderboard', process.env.KAFKA_LEADERBOARD_CONSUMER);
+    await broker.createTopics('getLeaderboard', process.env.KAFKA_LEADERBOARD_CONSUMER);
+    await broker.createTopics('getUserLeaderboard', process.env.KAFKA_LEADERBOARD_CONSUMER);
+    await broker.createTopics('getChallengeLeaderboard', process.env.KAFKA_LEADERBOARD_CONSUMER);
+    await broker.createTopics('getUserChallengeScore', process.env.KAFKA_LEADERBOARD_CONSUMER);
 });

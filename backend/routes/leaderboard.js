@@ -90,7 +90,7 @@ router.get('/mycompleted', async (req, res, next) => {
 });
 
 //score of all users in a single challenge
-router.get('/challenge/:title', async (req, res, next) => { // TODO not tested
+router.get('/challenge/:title', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardchallenge'
     let msg = JSON.stringify({title: req.params.title, response: topic})
     await broker.createTopics(topic, 1);

@@ -21,7 +21,27 @@ router.post('/', (req, res) => {
     return res.sendStatus(200);
 });
 
-router.get('/:title', async (req, res) => {
+router.get('/all', async (req, res) => {
+    let topic = req.user.email.split('@').join('') + 'challengelast'
+    let msg = JSON.stringify({response: topic})
+    await broker.createTopics(topic, 1);
+    broker.sendMessage('getLastChallenge', [{value: msg}])
+    let promise = broker.receiveMessage(topic, topic)
+    promise.then(async (data) => {
+        await data.consumer.disconnect()
+        broker.deleteTopics([topic])
+        if (data.msg === "") {
+            console.log("DB Error")
+            return res.sendStatus(500)
+        }
+        else {
+            let challenges = JSON.parse(data.msg)
+            return res.status(200).json(challenges);
+        }
+    })
+});
+
+router.get('/title/:title', async (req, res) => {
     let topic = req.user.email.split('@').join('') + 'challengetitle'
     let msg = JSON.stringify({title: req.params.title, response: topic})
     await broker.createTopics(topic, 1);

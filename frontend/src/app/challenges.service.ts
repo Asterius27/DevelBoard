@@ -12,7 +12,7 @@ export class ChallengesService {
 
   public getChallenge(title: string): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/challenges/' + title,
+      environment.apiUrl + '/challenges/title/' + title,
       { responseType: 'json' }
     );
   }
@@ -24,6 +24,13 @@ export class ChallengesService {
         responseType: 'json', 
         params: new HttpParams({fromObject: params}) 
       }
+    );
+  }
+
+  public getAllChallenges(): Observable<any> {
+    return this.http.get(
+      environment.apiUrl + '/challenges/all',
+      { responseType: 'json' }
     );
   }
 

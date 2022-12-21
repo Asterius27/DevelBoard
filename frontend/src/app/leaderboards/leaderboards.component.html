@@ -1,3 +1,15 @@
+<form class="form-inline" style="margin-top: 2%;">
+  <div class="input-group">
+    <select class="custom-select" #challenge>
+      <option selected value="">Choose a challenge</option>
+      <option *ngFor="let c of challenges;" [value]="c.title">{{ c.title }}</option>
+    </select>
+    <p style="margin: auto; margin-left: 2%; margin-right: 2%; line-height: 100%;">or</p>
+    <input type="text" class="form-control" #challengetitle placeholder="Enter a specific challenge title">
+    <button class="btn btn-primary" (click)="load_challenge_leaderboard(challenge.value, challengetitle.value);">Submit</button>
+  </div>
+</form>
+
 <div style="padding-top: 2%">
   <ul class="nav nav-tabs">
       <li class="nav-item">
@@ -6,6 +18,9 @@
       <li class="nav-item">
           <a class="nav-link" href="#" (click)="setTabs(2, $event);">Only Undertaken Challenges Leaderboard</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="setTabs(3, $event);">{{ title }}</a>
+    </li>
   </ul>
 </div>
 
@@ -36,6 +51,23 @@
   </thead>
   <tbody>
     <tr class="clickable-row" *ngFor="let user of leaderboard; let i = index" (click)="openProfile(user);">
+      <th scope="row">{{ i+1 }}</th>
+      <td>{{ user['username'] }}</td>
+      <td>{{ math.round(user['percentage']) }} %</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-hover" [hidden]="!(tabs===3)">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="clickable-row" *ngFor="let user of challengeLeaderboard; let i = index" (click)="openProfile(user);">
       <th scope="row">{{ i+1 }}</th>
       <td>{{ user['username'] }}</td>
       <td>{{ math.round(user['percentage']) }} %</td>

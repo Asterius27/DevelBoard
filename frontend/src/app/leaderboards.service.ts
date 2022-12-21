@@ -38,4 +38,11 @@ export class LeaderboardsService {
     );
   }
 
+  public getChallengeLeaderboard(title:string): Observable<any> {
+    return this.http.get(
+      environment.apiUrl + '/leaderboards/challenge/' + title,
+      { responseType: 'json' }
+    );
+  }
+
 }

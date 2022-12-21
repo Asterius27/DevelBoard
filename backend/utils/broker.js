@@ -59,4 +59,15 @@ async function deleteTopics(topics) {
     await admin.disconnect()
 }
 
-module.exports = { create, sendMessage, createTopics, deleteTopics, receiveMessage }
+async function cleanUp() {
+    const admin = kafka.admin()
+    await admin.connect()
+    let topics = await admin.listTopics()
+    console.log(topics);
+    await admin.deleteTopics({
+        topics: topics,
+    })
+    await admin.disconnect()
+}
+
+module.exports = { create, sendMessage, createTopics, deleteTopics, receiveMessage, cleanUp }

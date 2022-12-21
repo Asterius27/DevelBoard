@@ -5,6 +5,7 @@ const execp = util.promisify(require("child_process").exec);
 require('dotenv').config();
 const db = require('./database')
 
+// TODO add support for another language
 console.log('Starting...');
 let ready = db.connectTo()
 ready.then(() => {
