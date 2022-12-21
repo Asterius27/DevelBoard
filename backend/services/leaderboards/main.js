@@ -38,13 +38,13 @@ ready.then(() => {
             "Match (c:Challenge) "+
             "Return count(DISTINCT c.title) as number "+
           "} "+
-          "With p.username as username, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
-          "Return username, percentage/number as percent_score "+
+          "With p.username as username, p.email as email, (sum(toFloat(r.score)/toFloat(r.max_score)*100)) as percentage, number "+
+          "Return username, email, percentage/number as percent_score "+
           "ORDER BY percent_score DESC",
           null,
           result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), email: row.get('email'), percentage: row.get('percent_score')}));
             let message = JSON.stringify(rs)
             response(msg.response, [{value: message}])
           },
@@ -93,12 +93,12 @@ ready.then(() => {
       eachMessage: async ({ topic, partition, message }) => {
         let msg = JSON.parse(message.value.toString())
         db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge) "+
-          "RETURN p.username as username, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score "+
+          "RETURN p.username as username, p.email as email, (toFloat(sum(r.score))/toFloat(sum(r.max_score)))*100 as percent_score "+
           "ORDER BY percent_score DESC",
           null,
           result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), email: row.get('email'), percentage: row.get('percent_score')}));
             let message = JSON.stringify(rs)
             response(msg.response, [{value: message}])
           },
@@ -142,12 +142,12 @@ ready.then(() => {
       eachMessage: async ({ topic, partition, message }) => {
         let msg = JSON.parse(message.value.toString())
         db.executeQuery("Match (p:Person)-[r:RELTYPE]->(c:Challenge {title: $title}) "+
-          "RETURN p.username as username, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score "+
+          "RETURN p.username as username, p.email as email, (toFloat(r.score)/toFloat(r.max_score))*100 as percent_score "+
           "ORDER BY percent_score DESC",
           {title: msg.title},
           result =>{
             let rs=new Array;
-            result.records.forEach(row => rs.push({username: row.get('username'), percentage: row.get('percent_score')}));
+            result.records.forEach(row => rs.push({username: row.get('username'), email: row.get('email'), percentage: row.get('percent_score')}));
             let message = JSON.stringify(rs)
             response(msg.response, [{value: message}])
           },

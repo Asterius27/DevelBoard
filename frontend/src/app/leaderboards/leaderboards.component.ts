@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { LeaderboardsService } from '../leaderboards.service';
 import { ChallengesService } from '../challenges.service';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-leaderboards',
@@ -10,15 +11,15 @@ import { ChallengesService } from '../challenges.service';
 })
 export class LeaderboardsComponent implements OnInit {
 
-  public generalLeaderboard:{username: string, percentage: number}[] = [];
-  public leaderboard:{username: string, percentage: number}[] = [];
-  public challengeLeaderboard:{username: string, percentage: number}[] = [];
+  public generalLeaderboard:{username: string, email:string, percentage: number}[] = [];
+  public leaderboard:{username: string, email:string, percentage: number}[] = [];
+  public challengeLeaderboard:{username: string, email:string, percentage: number}[] = [];
   public challenges:{expireDate: any, language: string, title: string}[] = [];
   public title:string = "";
   public math = Math;
   public tabs = 1;
 
-  constructor(private l: LeaderboardsService, private c: ChallengesService, private renderer: Renderer2, @Inject(DOCUMENT) private doc: Document) {}
+  constructor(private l: LeaderboardsService, private c: ChallengesService, private u: UsersService, private renderer: Renderer2, @Inject(DOCUMENT) private doc: Document) {}
 
   ngOnInit(): void {
     this.load_leaderboards();
@@ -60,8 +61,12 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   openProfile(user:any) {
-    console.log(user);
-    // TODO load user profile and show it
+    this.u.getUser(user.email).subscribe({
+      next: (data) => {
+        console.log(data)
+        // TODO load user profile and show it
+      }
+    })
   }
 
   load_challenge_leaderboard(title1: string, title2: string) {

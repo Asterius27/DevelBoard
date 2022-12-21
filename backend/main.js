@@ -8,6 +8,7 @@ const register = require('./routes/register')
 const evaluateCode = require('./routes/evaluateCode')
 const challenges = require('./routes/challenges')
 const leaderboard = require('./routes/leaderboard')
+const users = require('./routes/users')
 const cors = require('cors')
 const pino = require('pino-http')
 const timeout = require('timers/promises')
@@ -25,6 +26,7 @@ app.use('/register', register)
 app.use('/evaluate', evaluateCode)
 app.use('/challenges', challenges)
 app.use('/leaderboards', leaderboard)
+app.use('/users', users)
 
 app.listen(port, async () => {
     console.log('Starting...');
