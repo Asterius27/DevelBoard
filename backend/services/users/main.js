@@ -37,6 +37,7 @@ ready.then(async () => {
 
   const addUserConsumer = kafka.consumer({ groupId: 'addUser-consumer' })
   const loginConsumer = kafka.consumer({ groupId: 'login-consumer' })
+  const addFollowConsumer = kafka.consumer({groupId: 'addFollow-consumer'})
   async function response(topic, messages) {
     let producer = kafka.producer()
     await producer.connect()
@@ -108,6 +109,35 @@ ready.then(async () => {
     })
   }
 
+  async function newFollowConsumer(){
+    await addFollowConsumer.connect()
+    await addFollowConsumer.subscribe({ topic: 'addFollow', fromBeginning: true })
+    await addFollowConsumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let data = JSON.parse(message.value.toString())
+        db.executeQuery(
+          'MATCH (a:Person {email: $email}), (b:Person {email: $friend})'+
+          'MERGE (a)-[r:FOLLOWS]->(b) Return b.name',
+          {email: data.email,friend: data.friend},
+          result => {
+            if (!result) {
+              response(data.response, [{value: 'Invalid User'}])
+            }
+            else {
+              let msg = result.records[0].get(0)
+              response(data.response, [{value: msg}])
+            }
+          },
+          error => {
+            console.log("DB Error: " + error)
+            response(data.response, [{value: ''}])
+          }
+        );
+      }
+    })
+  }
+
+  newFollowConsumer()
   registerConsumer();
   signInConsumer();
 })
