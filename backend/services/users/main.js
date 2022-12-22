@@ -38,6 +38,7 @@ ready.then(async () => {
   const addUserConsumer = kafka.consumer({ groupId: 'addUser-consumer' })
   const loginConsumer = kafka.consumer({ groupId: 'login-consumer' })
   const addFollowConsumer = kafka.consumer({groupId: 'addFollow-consumer'})
+  const editUserConsumer = kafka.consumer({ groupId: 'editUser-consumer' })
   async function response(topic, messages) {
     let producer = kafka.producer()
     await producer.connect()
@@ -138,6 +139,30 @@ ready.then(async () => {
   }
 
   newFollowConsumer()
+  async function editConsumer() {
+    await editUserConsumer.connect()
+    await editUserConsumer.subscribe({ topic: 'editUser', fromBeginning: true })
+    await editUserConsumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        let user = JSON.parse(message.value.toString())
+        // console.log(user)
+        db.executeQuery(
+          'MATCH (p:Person {email:$oldemail})'+
+          'SET p += {name:$name, email:$email, salt:$salt, digest:$digest, username:$username, surname:$surname}', 
+          {oldemail: user.oldemail, email: user.email, salt:user.salt, digest:user.digest, name:user.name, username:user.username, surname:user.surname},
+          result => {
+            response(user.response, [{value: 'OK'}])
+          },
+          error => {
+            console.log("DB Error: " + error)
+            response(user.response, [{value: ''}])
+          }
+        );
+      },
+    })
+  }
+
   registerConsumer();
   signInConsumer();
+  editConsumer();
 })

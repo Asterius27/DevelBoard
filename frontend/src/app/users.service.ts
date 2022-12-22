@@ -17,4 +17,18 @@ export class UsersService {
     );
   }
 
+  public editUser(email: string, password: string, name: string, username: string, surname: string): Observable<any> {
+    return this.http.post(
+      environment.apiUrl + '/users/',
+      {
+        email: email,
+        password: password, 
+        name: name,
+        username: username,
+        surname: surname
+      },
+      { responseType: 'text' }
+    );
+  }
+
 }

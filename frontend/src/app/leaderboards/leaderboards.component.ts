@@ -3,6 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { LeaderboardsService } from '../leaderboards.service';
 import { ChallengesService } from '../challenges.service';
 import { UsersService } from '../users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-leaderboards',
@@ -19,7 +20,7 @@ export class LeaderboardsComponent implements OnInit {
   public math = Math;
   public tabs = 1;
 
-  constructor(private l: LeaderboardsService, private c: ChallengesService, private u: UsersService, private renderer: Renderer2, @Inject(DOCUMENT) private doc: Document) {}
+  constructor(private l: LeaderboardsService, private c: ChallengesService, private renderer: Renderer2, @Inject(DOCUMENT) private doc: Document, private router: Router) {}
 
   ngOnInit(): void {
     this.load_leaderboards();
@@ -61,12 +62,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   openProfile(user:any) {
-    this.u.getUser(user.email).subscribe({
-      next: (data) => {
-        console.log(data)
-        // TODO load user profile and show it
-      }
-    })
+    this.router.navigate(['/profile', {email: user.email}]);
   }
 
   load_challenge_leaderboard(title1: string, title2: string) {

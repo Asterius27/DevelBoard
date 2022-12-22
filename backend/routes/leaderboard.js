@@ -27,9 +27,9 @@ router.get('/', async (req, res, next) => {
 });
 
 //like the one above but for only 1 user
-router.get('/user', async (req, res, next) => {
+router.get('/user/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboarduser'
-    let msg = JSON.stringify({email: req.user.email, response: topic})
+    let msg = JSON.stringify({email: req.params.email, response: topic})
     await broker.createTopics(topic, 1);
     broker.sendMessage('getGeneralUserLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
@@ -69,9 +69,9 @@ router.get('/completed', async (req, res, next) => {
 });
 
 //percentage for a single user of the challenges he took
-router.get('/mycompleted', async (req, res, next) => {
+router.get('/usercompleted/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleteduser'
-    let msg = JSON.stringify({email: req.user.email, response: topic})
+    let msg = JSON.stringify({email: req.params.email, response: topic})
     await broker.createTopics(topic, 1);
     broker.sendMessage('getUserLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)

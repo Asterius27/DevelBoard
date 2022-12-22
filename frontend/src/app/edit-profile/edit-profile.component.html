@@ -28,13 +28,13 @@
     
       <div class="form-group" style="padding-bottom: 4%">
         <label for="inputEmail">Email address</label>
-        <input type="email" #mail="ngModel" name="mail" [(ngModel)]="user.mail" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control" required id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+        <input type="email" #email="ngModel" name="email" [(ngModel)]="user.email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control" required id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
     
-      <div [hidden]="mail.valid || mail.pristine"
+      <div [hidden]="email.valid || email.pristine"
           class="alert alert-danger">
-        Mail is not valid
+        Email is not valid
       </div>
       
       <div class="form-group" style="padding-bottom: 5%">
@@ -62,7 +62,7 @@
       </div>
     
       <div class="text-center">
-        <button class="btn btn-lg btn-dark btn-block" [disabled]="!mail.valid || !password.valid || !username.valid || !surname.valid || !name.valid" (click)="post_user();">Edit</button>
+        <button class="btn btn-lg btn-primary btn-block" [disabled]="!email.valid || !password.valid || !username.valid || !surname.valid || !name.valid" (click)="post_user();">Edit</button>
       </div>
 
     </form>
