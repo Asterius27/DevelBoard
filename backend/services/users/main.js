@@ -138,7 +138,7 @@ ready.then(async () => {
     })
   }
 
-  newFollowConsumer()
+
   async function editConsumer() {
     await editUserConsumer.connect()
     await editUserConsumer.subscribe({ topic: 'editUser', fromBeginning: true })
@@ -161,7 +161,8 @@ ready.then(async () => {
       },
     })
   }
-
+  
+  newFollowConsumer()
   registerConsumer();
   signInConsumer();
   editConsumer();
