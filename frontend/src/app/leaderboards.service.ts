@@ -17,9 +17,9 @@ export class LeaderboardsService {
     );
   }
 
-  public getUserStats(): Observable<any> {
+  public getUserStats(email:string): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/leaderboards/mycompleted',
+      environment.apiUrl + '/leaderboards/usercompleted/' + email,
       { responseType: 'json' }
     );
   }
@@ -31,9 +31,9 @@ export class LeaderboardsService {
     );
   }
 
-  public getGeneralUserStats(): Observable<any> {
+  public getGeneralUserStats(email:string): Observable<any> {
     return this.http.get(
-      environment.apiUrl + '/leaderboards/user',
+      environment.apiUrl + '/leaderboards/user/' + email,
       { responseType: 'json' }
     );
   }

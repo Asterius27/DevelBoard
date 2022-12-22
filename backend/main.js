@@ -28,6 +28,8 @@ app.use('/challenges', challenges)
 app.use('/leaderboards', leaderboard)
 app.use('/users', users)
 
+// TODO "this server does not host this topic-partition" in express, "The coordinator is not aware of this member", "the group coordinator is not available", 
+// "there is no leader for this topic-partition as we are in the middle of a leadership election" in user consumer (getuser) ERROR, probably solved by cleaning kafka instance (?)
 app.listen(port, async () => {
     console.log('Starting...');
     await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for kafka to startup

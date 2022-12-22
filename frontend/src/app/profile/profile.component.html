@@ -9,7 +9,7 @@
                 <p>{{ user['username'] }}</p>
               </div>
               <button type="button" class="btn btn-outline-light" data-mdb-ripple-color="dark"
-                style="z-index: 1; margin-top: 20px; margin-bottom: 20px; margin-right: 20px;" (click)="edit_profile();" disabled> <!-- TODO remove disabled -->
+                style="z-index: 1; margin-top: 20px; margin-bottom: 20px; margin-right: 20px;" (click)="edit_profile();" [hidden]="hideEditBtn">
                 Edit profile
               </button>
             </div>
