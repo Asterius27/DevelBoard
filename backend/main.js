@@ -30,6 +30,9 @@ app.use('/users', users)
 
 // TODO "this server does not host this topic-partition" in express, "The coordinator is not aware of this member", "the group coordinator is not available", 
 // "there is no leader for this topic-partition as we are in the middle of a leadership election" in every consumer ERROR crashes after a certain amount of requests (seems random)
+// try and remove topic deletion (maybe the consumer (the leader of the topic) has to do it)
+// try and create topic with waitForLeaders: false
+// try and list partitions and topic info await admin.fetchTopicMetadata({ topics: <Array<String>> })
 app.listen(port, async () => {
     console.log('Starting...');
     await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for kafka to startup
