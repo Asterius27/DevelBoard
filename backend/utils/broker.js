@@ -36,18 +36,21 @@ async function receiveMessage(groupId, topic) {
 }
 
 async function createTopics(topic, numPartitions) {
-    const admin = kafka.admin()
-    await admin.connect()
-    let temp = await admin.createTopics({
-        topics: [
-            {
-                topic: topic, // String
-                numPartitions: numPartitions, // Number
-            },
-        ],
+    return new Promise(async (resolve) => {
+        const admin = kafka.admin()
+        await admin.connect()
+        let succ = await admin.createTopics({
+            topics: [
+                {
+                    topic: topic, // String
+                    numPartitions: numPartitions, // Number
+                },
+            ],
+        })
+        // console.log(topic + ": " + succ)
+        await admin.disconnect()
+        resolve(succ)
     })
-    // console.log(temp)
-    await admin.disconnect()
 }
 
 async function deleteTopics(topics) {
@@ -56,6 +59,7 @@ async function deleteTopics(topics) {
     await admin.deleteTopics({
         topics: topics, // String[]
     })
+    // console.log(topics[0] + ": Topic Deleted!");
     await admin.disconnect()
 }
 
@@ -63,10 +67,18 @@ async function cleanUp() {
     const admin = kafka.admin()
     await admin.connect()
     let topics = await admin.listTopics()
+    // let metadata = await admin.fetchTopicMetadata({ topics: topics })
     console.log(topics);
+    /*
+    metadata.topics.forEach(element => {
+        console.log(element.partitions)
+    });
+    */
     await admin.deleteTopics({
         topics: topics,
     })
+    topics = await admin.listTopics()
+    console.log(topics);
     await admin.disconnect()
 }
 

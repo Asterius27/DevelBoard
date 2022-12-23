@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../utils/auth');
 const broker = require('../utils/broker');
+const timeout = require('timers/promises')
 
 router.use(auth.authenticateToken);
 
@@ -9,7 +10,11 @@ router.use(auth.authenticateToken);
 router.get('/', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboard'
     let msg = JSON.stringify({response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getGeneralLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -30,7 +35,11 @@ router.get('/', async (req, res, next) => {
 router.get('/user/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboarduser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getGeneralUserLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -51,7 +60,11 @@ router.get('/user/:email', async (req, res, next) => {
 router.get('/completed', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleted'
     let msg = JSON.stringify({response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -72,7 +85,11 @@ router.get('/completed', async (req, res, next) => {
 router.get('/usercompleted/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleteduser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getUserLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -93,7 +110,11 @@ router.get('/usercompleted/:email', async (req, res, next) => {
 router.get('/challenge/:title', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardchallenge'
     let msg = JSON.stringify({title: req.params.title, response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getChallengeLeaderboard', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -114,7 +135,11 @@ router.get('/challenge/:title', async (req, res, next) => {
 router.get('/mychallenge/:title', async (req, res, next) => { // TODO not tested
     let topic = req.user.email.split('@').join('') + 'leaderboardchallengeuser'
     let msg = JSON.stringify({title: req.params.title, email: req.user.email, response: topic})
-    await broker.createTopics(topic, 1);
+    let succ = false;
+    while (!succ) {
+        succ = await broker.createTopics(topic, 1);
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+    }
     broker.sendMessage('getUserChallengeScore', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {

@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../utils/auth');
 const broker = require('../utils/broker');
 const crypto = require('crypto');
+const timeout = require('timers/promises')
 
 router.use(auth.authenticateToken);
 
@@ -17,7 +18,11 @@ function createPassword(pwd){
 router.get('/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'getuser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
-    await broker.createTopics(topic, 1);
+	let succ = false;
+	while (!succ) {
+		succ = await broker.createTopics(topic, 1);
+		await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+	}
     broker.sendMessage('loginUser', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -58,7 +63,11 @@ router.post('/', async function (req, res, next) {
 		user['salt'] = salt
 		user['digest'] = digest
 		let message = JSON.stringify(user)
-		await broker.createTopics(topic, 1);
+		let succ = false;
+		while (!succ) {
+			succ = await broker.createTopics(topic, 1);
+			await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+		}
 		broker.sendMessage('editUser', [{value: message}]);
 		let promise = broker.receiveMessage(topic, topic)
 		promise.then(async (data) => {

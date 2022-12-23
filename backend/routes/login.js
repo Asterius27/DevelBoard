@@ -5,6 +5,7 @@ const passportHTTP = require('passport-http');
 const broker = require('../utils/broker');
 const auth = require('../utils/auth');
 const crypto = require('crypto');
+const timeout = require('timers/promises')
 
 function validatePassword(user, pwd){
 	let hmac = crypto.createHmac('sha512', user.salt);
@@ -18,7 +19,11 @@ passport.use(new passportHTTP.BasicStrategy(
 		// console.log(email, password)
 		let topic = email.split('@').join('') + 'login'
 		let msg = JSON.stringify({email: email, response: topic})
-		await broker.createTopics(topic, 1);
+		let succ = false;
+		while (!succ) {
+			succ = await broker.createTopics(topic, 1);
+			await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+		}
 		broker.sendMessage('loginUser', [{value: msg}])
 		let promise = broker.receiveMessage(topic, topic)
 		promise.then(async (data) => {
