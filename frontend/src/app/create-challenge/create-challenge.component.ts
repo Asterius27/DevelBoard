@@ -47,11 +47,13 @@ export class CreateChallengeComponent implements OnInit {
   }
 
   submit() {
+    let test_re = /^(\[([0-9]{1,}, |"[\w]{1,}", |[0-9]{1,}\.[0-9]{1,}, )*([0-9]{1,}|"[\w]{1,}"|[0-9]{1,}\.[0-9]{1,})\]; )*\[([0-9]{1,}, |"[\w]{1,}", |[0-9]{1,}\.[0-9]{1,}, )*([0-9]{1,}|"[\w]{1,}"|[0-9]{1,}\.[0-9]{1,})\]$/;
+    let result_re = /^(\[[0-9]{1,}\]; |\["[\w]{1,}"\]; |\[[0-9]{1,}\.[0-9]{1,}\]; )*(\[[0-9]{1,}\]|\["[\w]{1,}"\]|\[[0-9]{1,}\.[0-9]{1,}\])$/;
     let temp:string[] = this.createChallengeForm.get('expireDate')!.value.split('-');
-    let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; '); // TODO add regexp check
+    let tests:string[] = this.createChallengeForm.get('testCases')!.value.split('; ');
     let results:string[] = this.createChallengeForm.get('resultCases')!.value.split('; ');
     let time:string[] = this.createChallengeForm.get('expireTime')!.value.split(':');
-    if (tests.length === results.length && this.createChallengeForm.get('language')!.value !== "") {
+    if (tests.length === results.length && this.createChallengeForm.get('language')!.value !== "" && this.createChallengeForm.get('testCases')!.value.match(test_re) !== null && this.createChallengeForm.get('resultCases')!.value.match(result_re) !== null) {
       let date = {
         year: temp[0],
         month: temp[1],
