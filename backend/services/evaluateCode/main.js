@@ -5,7 +5,6 @@ const execp = util.promisify(require("child_process").exec);
 require('dotenv').config();
 const db = require('./database')
 
-// TODO add support for another language
 console.log('Starting...');
 let ready = db.connectTo()
 ready.then(() => {
@@ -37,10 +36,12 @@ ready.then(() => {
         let max_score = 0;
         let compile = false;
         let results = [];
+        // TODO query doesn't execute for some reason
         db.executeQuery('MATCH (node:Challenge {title: $title}) RETURN node.resultCases as resultCases, node.testCases as testCases',
           {title: data.title},
           result => {
             challenge = result.records[0];
+            console.log("Here "+challenge)
           },
           error => {
             console.log("DB Error: " + error)
@@ -52,67 +53,114 @@ ready.then(() => {
           fs.mkdirSync('./submitted_code');
         }
         let dirName = "./submitted_code/file"+i;
-        let fileName = "temp."+data.language;
         while(fs.existsSync(dirName)) {
           i = i + 1;
           dirName = "./submitted_code/file"+i;
         }
         fs.mkdirSync(dirName);
-        // console.log(fileName);
-        // console.log(data.code);
-        fs.writeFileSync(dirName + "/" + fileName, data.code);
-        try {
-          let { stdout, stderr } = await execp("javac "+ dirName + "/" + fileName);
-          if (!stderr) {
-            compile = true;
+        if (data.language === "java") {
+          let fileName = "temp."+data.language;
+          // console.log(fileName);
+          // console.log(data.code);
+          fs.writeFileSync(dirName + "/" + fileName, data.code);
+          try {
+            let { stdout, stderr } = await execp("javac "+ dirName + "/" + fileName);
+            if (!stderr) {
+              compile = true;
+              while (challenge.length === 0) {}
+              let tests = [];
+              let tests_json = challenge.get("testCases").split('; ');
+              let results_json = challenge.get("resultCases").split('; ');
+              tests_json.forEach((test) => tests.push(JSON.parse(test)));
+              results_json.forEach((result) => results.push(JSON.parse(result)));
+              // console.log(tests);
+              for (let i = 0; i < tests.length; i++) {
+                let args = "";
+                for (let j = 0; j < tests[i].length; j++) {
+                  args = args + " " + tests[i][j];
+                }
+                // console.log(args);
+                try {
+                  let { stdout, stderr } = await execp("java -classpath " + dirName + " Challenge" + args, { timeout: 60000 });
+                  if (stderr) {
+                    console.log(stderr);
+                  }
+                  else {
+                    // console.log(JSON.stringify(stdout));
+                    let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
+                    let res_out = JSON.stringify(results[i][0]);
+                    if (res_out.charAt(0) === '"') {
+                      res_out = res_out.slice(1, -1);
+                    }
+                    // console.log(out);
+                    // console.log(res_out);
+                    if (out === res_out) {
+                      score = score + 1;
+                    }
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            }
+            else {
+              console.log(stderr);
+              compile = false;
+            }
+          } catch (e) {
             while (challenge.length === 0) {}
+            let results_json = challenge.get("resultCases").split('; ');
+            results_json.forEach((result) => results.push(JSON.parse(result)));
+            console.log(e);
+            compile = false;
+          }
+          max_score = results.length;
+        }
+        if (data.language === "python") {
+          let fileName = "temp.py";
+          fs.writeFileSync(dirName + "/" + fileName, data.code);
+          try {
+            compile = true
+            console.log(challenge)
+            while (challenge.length === 0) {}
+            console.log(challenge)
             let tests = [];
             let tests_json = challenge.get("testCases").split('; ');
             let results_json = challenge.get("resultCases").split('; ');
             tests_json.forEach((test) => tests.push(JSON.parse(test)));
             results_json.forEach((result) => results.push(JSON.parse(result)));
-            // console.log(tests);
+            console.log(tests);
             for (let i = 0; i < tests.length; i++) {
               let args = "";
               for (let j = 0; j < tests[i].length; j++) {
                 args = args + " " + tests[i][j];
               }
-              // console.log(args);
-              try {
-                let { stdout, stderr } = await execp("java -classpath " + dirName + " Challenge" + args, { timeout: 60000 });
-                if (stderr) {
-                  console.log(stderr);
+              console.log(args);
+              let { stdout, stderr } = await execp("python "+ dirName + "/" + fileName + args, { timeout: 60000 });
+              if (stderr) {
+                console.log(stderr);
+              } else {
+                let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
+                let res_out = JSON.stringify(results[i][0]);
+                if (res_out.charAt(0) === '"') {
+                  res_out = res_out.slice(1, -1);
                 }
-                else {
-                  // console.log(JSON.stringify(stdout));
-                  let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
-                  let res_out = JSON.stringify(results[i][0]);
-                  if (res_out.charAt(0) === '"') {
-                    res_out = res_out.slice(1, -1);
-                  }
-                  // console.log(out);
-                  // console.log(res_out);
-                  if (out === res_out) {
-                    score = score + 1;
-                  }
+                console.log(out);
+                console.log(res_out);
+                if (out === res_out) {
+                  score = score + 1;
                 }
-              } catch (e) {
-                console.log(e);
               }
             }
-          }
-          else {
-            console.log(stderr);
+          } catch (e) {
+            while (challenge.length === 0) {}
+            let results_json = challenge.get("resultCases").split('; ');
+            results_json.forEach((result) => results.push(JSON.parse(result)));
+            console.log(e);
             compile = false;
           }
-        } catch (e) {
-          while (challenge.length === 0) {}
-          let results_json = challenge.get("resultCases").split('; ');
-          results_json.forEach((result) => results.push(JSON.parse(result)));
-          console.log(e);
-          compile = false;
+          max_score = results.length;
         }
-        max_score = results.length;
         db.executeQuery('MATCH (p:Person), (c:Challenge) WHERE p.email = $email AND c.title = $title CREATE (p)-[r:RELTYPE {score: $score, compile: $compile, max_score: $max_score}]->(c) RETURN type(r)',
           {email: data.email, title: data.title, score: score, compile: compile, max_score: max_score},
           (result) => {

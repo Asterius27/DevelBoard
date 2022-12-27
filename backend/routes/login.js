@@ -30,7 +30,7 @@ passport.use(new passportHTTP.BasicStrategy(
 			await data.consumer.disconnect()
 			broker.deleteTopics([topic])
 			if (data.msg === "") {
-				return done({statusCode: 500, error: true, errormessage: error})
+				return done({statusCode: 500, error: true, errormessage: "DB error"})
 			}
 			if (data.msg === "Invalid User") {
 				return done(null, false, {statusCode: 500, error: true, errormessage: "Invalid user"})

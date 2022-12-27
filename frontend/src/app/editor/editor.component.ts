@@ -65,7 +65,13 @@ export class EditorComponent implements OnInit, AfterViewInit {
     if (Object.entries(this.aceEditor).length !== 0) {
       this.upload = true;
       this.loading = false;
-      let temp:string = "class Challenge {\n" + this.aceEditor.getValue() + "\n}";
+      let temp:string = "";
+      if (this.challenge['language'] === "Java") {
+        temp = "class Challenge {\n" + this.aceEditor.getValue() + "\n}";
+      }
+      else {
+        temp = this.aceEditor.getValue();
+      }
       // console.log(this.aceEditor.getValue());
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
