@@ -30,10 +30,10 @@ router.post('/', async function (req, res, next) {
 		user['salt'] = salt
 		user['digest'] = digest
 		let message = JSON.stringify(user)
-		let succ = false;
+		let succ = await broker.createTopics(topic, 1);
 		while (!succ) {
-			succ = await broker.createTopics(topic, 1);
 			await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+			succ = await broker.createTopics(topic, 1);
 		}
 		broker.sendMessage('addUser', [{value: message}]);
 		let promise = broker.receiveMessage(topic, topic)

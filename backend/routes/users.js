@@ -9,8 +9,8 @@ router.use(auth.authenticateToken);
 
 function createPassword(pwd){
 	let salt = crypto.randomBytes(16).toString('hex');
-    let hmac = crypto.createHmac('sha512', salt);
-    hmac.update(pwd);
+	let hmac = crypto.createHmac('sha512', salt);
+	hmac.update(pwd);
 	let digest = hmac.digest('hex');
 	return {salt,digest}
 }
@@ -18,11 +18,11 @@ function createPassword(pwd){
 router.get('/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'getuser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
-	let succ = false;
-	while (!succ) {
-		succ = await broker.createTopics(topic, 1);
-		await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
-	}
+	let succ = await broker.createTopics(topic, 1);
+    while (!succ) {
+        await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+        succ = await broker.createTopics(topic, 1);
+    }
     broker.sendMessage('loginUser', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)
     promise.then(async (data) => {
@@ -63,10 +63,10 @@ router.post('/', async function (req, res, next) {
 		user['salt'] = salt
 		user['digest'] = digest
 		let message = JSON.stringify(user)
-		let succ = false;
+		let succ = await broker.createTopics(topic, 1);
 		while (!succ) {
-			succ = await broker.createTopics(topic, 1);
 			await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+			succ = await broker.createTopics(topic, 1);
 		}
 		broker.sendMessage('editUser', [{value: message}]);
 		let promise = broker.receiveMessage(topic, topic)
