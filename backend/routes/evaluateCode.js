@@ -15,10 +15,10 @@ router.post('/', async (req, res, next) => {
         email: req.user.email,
         response: topic
     })
-    let succ = false;
+    let succ = await broker.createTopics(topic, 1);
     while (!succ) {
-        succ = await broker.createTopics(topic, 1);
         await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+        succ = await broker.createTopics(topic, 1);
     }
     broker.sendMessage('evaluateCode', [{value: msg}])
     let promise = broker.receiveMessage(topic, topic)

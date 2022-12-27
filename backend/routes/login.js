@@ -19,10 +19,10 @@ passport.use(new passportHTTP.BasicStrategy(
 		// console.log(email, password)
 		let topic = email.split('@').join('') + 'login'
 		let msg = JSON.stringify({email: email, response: topic})
-		let succ = false;
+		let succ = await broker.createTopics(topic, 1);
 		while (!succ) {
-			succ = await broker.createTopics(topic, 1);
 			await timeout.setTimeout(process.env.KAFKA_RETRY_TIMEOUT);
+			succ = await broker.createTopics(topic, 1);
 		}
 		broker.sendMessage('loginUser', [{value: msg}])
 		let promise = broker.receiveMessage(topic, topic)
