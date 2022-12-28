@@ -35,7 +35,7 @@ app.listen(port, async () => {
     broker.create();
     // await broker.cleanUp();
 
-    await broker.createTopics('addUser', process.env.KAFKA_USER_CONSUMER); // TODO try to increase the partitions and the consumers
+    await broker.createTopics('addUser', process.env.KAFKA_USER_CONSUMER); // TODO try to increase the partitions and the consumers (client id might need to be unique)
     await broker.createTopics('loginUser', process.env.KAFKA_USER_CONSUMER);
     await broker.createTopics('editUser', process.env.KAFKA_USER_CONSUMER);
 
