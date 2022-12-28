@@ -110,6 +110,7 @@ ready.then(async () => {
     })
   }
 
+  // TODO
   async function newFollowConsumer(){
     await addFollowConsumer.connect()
     await addFollowConsumer.subscribe({ topic: 'addFollow', fromBeginning: true })
