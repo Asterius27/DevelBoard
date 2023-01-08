@@ -5,7 +5,6 @@ const execp = util.promisify(require("child_process").exec);
 require('dotenv').config();
 const db = require('./database')
 
-// TODO test docker python installation
 console.log('Starting...');
 let ready = db.connectTo()
 ready.then(() => {
@@ -79,7 +78,7 @@ ready.then(() => {
                       }
                       else {
                         // console.log(JSON.stringify(stdout));
-                        let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
+                        let out = JSON.stringify(stdout).slice(1, -3); // TODO -5 for windows, -3 for linux
                         let res_out = JSON.stringify(results[i][0]);
                         if (res_out.charAt(0) === '"') {
                           res_out = res_out.slice(1, -1);
@@ -122,11 +121,11 @@ ready.then(() => {
                   for (let j = 0; j < tests[i].length; j++) {
                     args = args + " " + tests[i][j];
                   }
-                  let { stdout, stderr } = await execp("python "+ dirName + "/" + fileName + args, { timeout: 60000 });
+                  let { stdout, stderr } = await execp("python3 "+ dirName + "/" + fileName + args, { timeout: 60000 });
                   if (stderr) {
                     console.log(stderr);
                   } else {
-                    let out = JSON.stringify(stdout).slice(1, -5); // TODO -5 for windows, -3 for linux
+                    let out = JSON.stringify(stdout).slice(1, -3); // TODO -5 for windows, -3 for linux
                     let res_out = JSON.stringify(results[i][0]);
                     if (res_out.charAt(0) === '"') {
                       res_out = res_out.slice(1, -1);
@@ -136,13 +135,15 @@ ready.then(() => {
                     }
                   }
                 }
+                max_score = results.length;
               } catch (e) {
+                let results = []
                 let results_json = challenge.get("resultCases").split('; ');
                 results_json.forEach((result) => results.push(JSON.parse(result)));
                 console.log(e);
                 compile = false;
+                max_score = results.length;
               }
-              max_score = results.length;
             }
             db.executeQuery('MATCH (p:Person), (c:Challenge) WHERE p.email = $email AND c.title = $title CREATE (p)-[r:RELTYPE {score: $score, compile: $compile, max_score: $max_score}]->(c) RETURN type(r)',
               {email: data.email, title: data.title, score: score, compile: compile, max_score: max_score},

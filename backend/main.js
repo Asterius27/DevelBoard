@@ -30,7 +30,7 @@ app.use('/users', users)
 
 app.listen(port, async () => {
     console.log('Starting...');
-    await timeout.setTimeout(1000); // TODO not the best solution (25000), have to wait for kafka to startup
+    await timeout.setTimeout(25000); // TODO not the best solution (25000), have to wait for kafka to startup
     console.log('app listening on port '+port);
     broker.create();
     // await broker.cleanUp();

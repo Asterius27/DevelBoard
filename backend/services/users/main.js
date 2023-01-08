@@ -163,7 +163,7 @@ ready.then(async () => {
     })
   }
   
-  newFollowConsumer()
+  // newFollowConsumer()
   registerConsumer();
   signInConsumer();
   editConsumer();

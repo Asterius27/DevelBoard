@@ -36,9 +36,13 @@ fun()
 ```
 
 ## Build and Deploy
-This version of the application can only be run through docker, below are the commands that have to be used to build and run the application. Both commands have to be run in the main folder (where the docker-compose file is located).
+It's recommended to run the application through docker, below are the commands that have to be used to build and run the application. Both commands have to be run in the main folder (where the docker-compose file is located).
 ```
 docker-compose build
 docker-compose up
 ```
 Then the application will be available at localhost:4200
+
+If you want to run the application without docker, then...
+
+## Duplicating Services
