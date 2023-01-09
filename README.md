@@ -14,7 +14,7 @@ This version of the application implements most of the functionalities, but ther
 - Everything the program (written in any language) outputs to standard output will be compared against the expected output (result cases)
 - Test cases are passed as args to the main method in java and to sys.argv in python
 - All other classes must be declared as static in java
-- The application takes a while to build and then launch so please be patient
+- The application takes a while to build and then launch so please be patient (when using the provided docker compose: \~10 min to build, \~2 min to launch on an average computer, so it might vary)
 
 ## Example
 For example if our challenge is to write a program that adds two numbers, then our java program would be:
