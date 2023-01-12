@@ -6,7 +6,6 @@ const timeout = require('timers/promises')
 
 router.use(auth.authenticateToken);
 
-//this gives for each user the percentage of point in all the challenges, even the ones he didn't undertake
 router.get('/', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboard'
     let msg = JSON.stringify({response: topic})
@@ -31,7 +30,6 @@ router.get('/', async (req, res, next) => {
     })
 });
 
-//like the one above but for only 1 user
 router.get('/user/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboarduser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
@@ -56,7 +54,6 @@ router.get('/user/:email', async (req, res, next) => {
     })
 });
 
-//percentage score for all users on the challenge they took, not the ones they didn't
 router.get('/completed', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleted'
     let msg = JSON.stringify({response: topic})
@@ -81,7 +78,6 @@ router.get('/completed', async (req, res, next) => {
     })
 });
 
-//percentage for a single user of the challenges he took
 router.get('/usercompleted/:email', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardcompleteduser'
     let msg = JSON.stringify({email: req.params.email, response: topic})
@@ -106,7 +102,6 @@ router.get('/usercompleted/:email', async (req, res, next) => {
     })
 });
 
-//score of all users in a single challenge
 router.get('/challenge/:title', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardchallenge'
     let msg = JSON.stringify({title: req.params.title, response: topic})
@@ -131,8 +126,7 @@ router.get('/challenge/:title', async (req, res, next) => {
     })
 });
 
-//score of a single user on a single challenge
-router.get('/mychallenge/:title', async (req, res, next) => { // TODO not tested
+router.get('/mychallenge/:title', async (req, res, next) => {
     let topic = req.user.email.split('@').join('') + 'leaderboardchallengeuser'
     let msg = JSON.stringify({title: req.params.title, email: req.user.email, response: topic})
     let succ = await broker.createTopics(topic, 1);

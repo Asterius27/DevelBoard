@@ -21,8 +21,8 @@ ready.then(() => {
     let producer = kafka.producer()
     await producer.connect()
     await producer.send({
-      topic: topic, // 'test-topic'
-      messages: messages, // [{ value: 'Hello KafkaJS user!' }, ...]
+      topic: topic,
+      messages: messages,
     })
     await producer.disconnect()
   }

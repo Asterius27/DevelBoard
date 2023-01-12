@@ -72,10 +72,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
       else {
         temp = this.aceEditor.getValue();
       }
-      // console.log(this.aceEditor.getValue());
       this.c.submitCode(temp, this.challenge['language'].toLowerCase(), this.title).subscribe({
         next: (data) => {
-          // console.log(data.score);
           this.score = data.score + "/" + data.max_score;
           if (data.compile) {
             this.compile = "compiled";

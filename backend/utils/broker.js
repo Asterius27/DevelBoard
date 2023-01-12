@@ -14,8 +14,8 @@ async function sendMessage(topic, messages) {
     const producer = kafka.producer()
     await producer.connect()
     await producer.send({
-        topic: topic, // 'test-topic'
-        messages: messages, // [{ value: 'Hello KafkaJS user!' }, ...]
+        topic: topic,
+        messages: messages,
     })
     await producer.disconnect()
 }
@@ -27,7 +27,6 @@ async function receiveMessage(groupId, topic) {
     const res = new Promise(async (resolve, reject) => {
         await consumer.run({
             eachMessage: async ({ topic, partition, message }) => {
-                // console.log("TOKEN: " + message.value.toString())
                 resolve({msg: message.value.toString(), consumer: consumer})
             },
         })
@@ -42,12 +41,11 @@ async function createTopics(topic, numPartitions) {
         let succ = await admin.createTopics({
             topics: [
                 {
-                    topic: topic, // String
-                    numPartitions: numPartitions, // Number
+                    topic: topic,
+                    numPartitions: numPartitions,
                 },
             ],
         })
-        // console.log(topic + ": " + succ)
         await admin.disconnect()
         resolve(succ)
     })
@@ -57,9 +55,8 @@ async function deleteTopics(topics) {
     const admin = kafka.admin()
     await admin.connect()
     await admin.deleteTopics({
-        topics: topics, // String[]
+        topics: topics,
     })
-    // console.log(topics[0] + ": Topic Deleted!");
     await admin.disconnect()
 }
 
@@ -67,18 +64,10 @@ async function cleanUp() {
     const admin = kafka.admin()
     await admin.connect()
     let topics = await admin.listTopics()
-    // let metadata = await admin.fetchTopicMetadata({ topics: topics })
-    console.log(topics);
-    /*
-    metadata.topics.forEach(element => {
-        console.log(element.partitions)
-    });
-    */
     await admin.deleteTopics({
         topics: topics,
     })
     topics = await admin.listTopics()
-    console.log(topics);
     await admin.disconnect()
 }
 

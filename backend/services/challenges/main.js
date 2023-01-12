@@ -25,8 +25,8 @@ ready.then(() => {
     let producer = kafka.producer()
     await producer.connect()
     await producer.send({
-      topic: topic, // 'test-topic'
-      messages: messages, // [{ value: 'Hello KafkaJS user!' }, ...]
+      topic: topic,
+      messages: messages,
     })
     await producer.disconnect()
   }
@@ -40,9 +40,7 @@ ready.then(() => {
         db.executeQuery(
           'CREATE (node:Challenge {title: $title, expireDate: localdatetime($date), description: $description, language: $language, testCases: $testCases, resultCases: $resultCases}) RETURN node',
           {title: challenge.title, date: challenge.expireDate, description: challenge.description, language: challenge.language, testCases: challenge.testCases,resultCases: challenge.resultCases},
-          result => {
-            // console.log("Challenge created");
-          },
+          result => {},
           error => {
             console.log(error);
           }

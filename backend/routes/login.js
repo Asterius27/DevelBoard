@@ -16,7 +16,6 @@ function validatePassword(user, pwd){
 
 passport.use(new passportHTTP.BasicStrategy(
 	async function(email, password, done) {
-		// console.log(email, password)
 		let topic = email.split('@').join('') + 'login'
 		let msg = JSON.stringify({email: email, response: topic})
 		let succ = await broker.createTopics(topic, 1);
@@ -56,7 +55,6 @@ router.get('/', passport.authenticate('basic', {session: false}), function (req,
 		email: req.user.email,
 		role: req.user.role
 	};
-	// console.log(tokendata)
 	let token_signed = auth.generateAccessToken(tokendata)
 	return res.status(200).json({error: false, errormessage: "", token: token_signed});
 });

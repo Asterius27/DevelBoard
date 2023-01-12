@@ -26,9 +26,8 @@ export class HomeComponent implements OnInit {
   }
 
   load_challenges() {
-    this.c.getChallenges({}).subscribe({ // TODO add filter
+    this.c.getChallenges({}).subscribe({
       next: (data) => {
-        // console.log(data[0]) // title, expireDate, language
         for (let i = 0; i < data.length; i++) {
           let date = new Date(data[i].expireDate.year, data[i].expireDate.month - 1, data[i].expireDate.day, data[i].expireDate.hour, data[i].expireDate.minute);
           let challenge = {
@@ -51,16 +50,12 @@ export class HomeComponent implements OnInit {
           }
           this.timers.push(interval(1000).subscribe(x => {this.timer(challenge)}));
         }
-        // console.log(this.challenges_c1[0].expireDate);
-        // console.log(this.challenges_c2);
-        // console.log(this.challenges_c3);
       }
     });
   }
 
   load_editor(challenge:any, event:any) {
     event.preventDefault();
-    // console.log(challenge['title']);
     this.router.navigate(['/editor', {title: challenge['title']}]);
   }
 

@@ -43,8 +43,8 @@ ready.then(async () => {
     let producer = kafka.producer()
     await producer.connect()
     await producer.send({
-      topic: topic, // 'test-topic'
-      messages: messages, // [{ value: 'Hello KafkaJS user!' }, ...]
+      topic: topic,
+      messages: messages,
     })
     await producer.disconnect()
   }
@@ -55,13 +55,11 @@ ready.then(async () => {
     await addUserConsumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         let user = JSON.parse(message.value.toString())
-        // console.log(user)
         db.executeQuery(
           'CREATE (n:Person {name:$name, email:$email, salt:$salt, digest:$digest, role:$role, username:$username, surname:$surname}) return n', 
           {email: user.email, salt:user.salt, digest:user.digest, name:user.name, role:user.role, username:user.username, surname:user.surname},
           result => {
             let dbuser = result.records[0].get(0)
-            // console.log(user.properties)
             let token_data = {
               username: dbuser.properties.username,
               name: dbuser.properties.name,
@@ -96,7 +94,6 @@ ready.then(async () => {
             }
             else {
               let user = result.records[0].get(0)
-              // console.log(user.properties)
               let msg = JSON.stringify(user.properties)
               response(data.response, [{value: msg}])
             }
@@ -110,43 +107,12 @@ ready.then(async () => {
     })
   }
 
-  // TODO
-  async function newFollowConsumer(){
-    await addFollowConsumer.connect()
-    await addFollowConsumer.subscribe({ topic: 'addFollow', fromBeginning: true })
-    await addFollowConsumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        let data = JSON.parse(message.value.toString())
-        db.executeQuery(
-          'MATCH (a:Person {email: $email}), (b:Person {email: $friend})'+
-          'MERGE (a)-[r:FOLLOWS]->(b) Return b.name',
-          {email: data.email,friend: data.friend},
-          result => {
-            if (!result) {
-              response(data.response, [{value: 'Invalid User'}])
-            }
-            else {
-              let msg = result.records[0].get(0)
-              response(data.response, [{value: msg}])
-            }
-          },
-          error => {
-            console.log("DB Error: " + error)
-            response(data.response, [{value: ''}])
-          }
-        );
-      }
-    })
-  }
-
-
   async function editConsumer() {
     await editUserConsumer.connect()
     await editUserConsumer.subscribe({ topic: 'editUser', fromBeginning: true })
     await editUserConsumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         let user = JSON.parse(message.value.toString())
-        // console.log(user)
         db.executeQuery(
           'MATCH (p:Person {email:$oldemail})'+
           'SET p += {name:$name, email:$email, salt:$salt, digest:$digest, username:$username, surname:$surname}', 
@@ -163,7 +129,6 @@ ready.then(async () => {
     })
   }
   
-  // newFollowConsumer()
   registerConsumer();
   signInConsumer();
   editConsumer();

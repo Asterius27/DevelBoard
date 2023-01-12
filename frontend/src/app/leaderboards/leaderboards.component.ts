@@ -30,14 +30,12 @@ export class LeaderboardsComponent implements OnInit {
   load_leaderboards() {
     this.l.getGeneralLeaderboard().subscribe({
       next: (data) => {
-        // console.log(data);
         this.generalLeaderboard = data;
       }
     });
 
     this.l.getLeaderboard().subscribe({
       next: (data) => {
-        // console.log(data);
         this.leaderboard = data;
       }
     });

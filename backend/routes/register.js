@@ -24,7 +24,6 @@ router.post('/', async function (req, res, next) {
 		surname: req.body.surname,
 		response: topic
 	}
-	// console.log(user);
 	if (user.email && user.password && user.name && user.username && user.surname) {
 		let {salt, digest} = createPassword(user.password)
 		user['salt'] = salt
@@ -38,7 +37,6 @@ router.post('/', async function (req, res, next) {
 		broker.sendMessage('addUser', [{value: message}]);
 		let promise = broker.receiveMessage(topic, topic)
 		promise.then(async (data) => {
-			// console.log("PROMISE RESOLVED: " + data.msg)
 			await data.consumer.disconnect()
 			broker.deleteTopics([topic])
 			if (data.msg === "") {

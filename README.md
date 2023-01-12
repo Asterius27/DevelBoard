@@ -65,13 +65,14 @@ If you want to run the application without docker, then:
 
 1. Install kafka and neo4j
 2. Update every .env file, there's one for the frontend (they are inside the environments folder), one for the backend and one for every service (iniside backend/services), with the correct values (they will depend on your environment)
-3. Install both python3 and java (both the jdk and jre) in the machine that will run the code evaluation consumer and make sure that the path environment variables (of your os) are set correctly (so that both python and java can be used in a terminal)
-4. Install node and npm
-5. Install Angular (npm install -g @angular/cli)
-6. Run npm install inside the frontend and backend folders, and inside every folder located in backend/services/
-7. Make sure kafka and neo4j are running
-8. Run npm start inside the frontend and backend folders, and inside every folder located in backend/services/
-9. Hopefully the application will be available at localhost:4200 or whatever combination of host-port you have set for the frontend
+3. Beware that lines 76 and 121 of the main.js file inside backend/services/evaluateCode/ depend on the operating system. As they are set they will work in linux, for windows you should change the -3 to -5, for other operating systems you have to see for yourself.
+4. Install both python3 and java (both the jdk and jre) in the machine that will run the code evaluation consumer and make sure that the path environment variables (of your os) are set correctly (so that both python and java can be used in a terminal)
+5. Install node and npm
+6. Install Angular (npm install -g @angular/cli)
+7. Run npm install inside the frontend and backend folders, and inside every folder located in backend/services/
+8. Make sure kafka and neo4j are running
+9. Run npm start inside the frontend and backend folders, and inside every folder located in backend/services/
+10. Hopefully the application will be available at localhost:4200 or whatever combination of host-port you have set for the frontend
 
 ## Duplicating Services
 Every service may be duplicated for scalability purposes. In order to duplicate a service you need to update the .env file inside the backend folder (this will tell the application how many kafka partitions it has to create for each topic regarding that service) and update the docker-compose file in order to duplicate the service container(s). Of course if you are running the application in a different configuration (for example without using docker), then you only need to update the .env file, and the actual duplication of the service will depend on your configuration (though in general it is sufficient to launch another instance of the service you are interested in).

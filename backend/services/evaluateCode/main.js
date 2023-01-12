@@ -19,8 +19,8 @@ ready.then(() => {
     let producer = kafka.producer()
     await producer.connect()
     await producer.send({
-      topic: topic, // 'test-topic'
-      messages: messages, // [{ value: 'Hello KafkaJS user!' }, ...]
+      topic: topic,
+      messages: messages,
     })
     await producer.disconnect()
   }
@@ -52,8 +52,6 @@ ready.then(() => {
             fs.mkdirSync(dirName);
             if (data.language === "java") {
               let fileName = "temp."+data.language;
-              // console.log(fileName);
-              // console.log(data.code);
               fs.writeFileSync(dirName + "/" + fileName, data.code);
               try {
                 let { stdout, stderr } = await execp("javac "+ dirName + "/" + fileName);
@@ -64,27 +62,22 @@ ready.then(() => {
                   let results_json = challenge.get("resultCases").split('; ');
                   tests_json.forEach((test) => tests.push(JSON.parse(test)));
                   results_json.forEach((result) => results.push(JSON.parse(result)));
-                  // console.log(tests);
                   for (let i = 0; i < tests.length; i++) {
                     let args = "";
                     for (let j = 0; j < tests[i].length; j++) {
                       args = args + " " + tests[i][j];
                     }
-                    // console.log(args);
                     try {
                       let { stdout, stderr } = await execp("java -classpath " + dirName + " Challenge" + args, { timeout: 60000 });
                       if (stderr) {
                         console.log(stderr);
                       }
                       else {
-                        // console.log(JSON.stringify(stdout));
-                        let out = JSON.stringify(stdout).slice(1, -3); // TODO -5 for windows, -3 for linux
+                        let out = JSON.stringify(stdout).slice(1, -3);
                         let res_out = JSON.stringify(results[i][0]);
                         if (res_out.charAt(0) === '"') {
                           res_out = res_out.slice(1, -1);
                         }
-                        // console.log(out);
-                        // console.log(res_out);
                         if (out === res_out) {
                           score = score + 1;
                         }
@@ -125,7 +118,7 @@ ready.then(() => {
                   if (stderr) {
                     console.log(stderr);
                   } else {
-                    let out = JSON.stringify(stdout).slice(1, -3); // TODO -5 for windows, -3 for linux
+                    let out = JSON.stringify(stdout).slice(1, -3);
                     let res_out = JSON.stringify(results[i][0]);
                     if (res_out.charAt(0) === '"') {
                       res_out = res_out.slice(1, -1);
