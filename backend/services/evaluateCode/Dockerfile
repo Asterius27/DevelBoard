@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:slim
 RUN apt-get update
 RUN apt-get -y install openjdk-17-jdk openjdk-17-jre
 RUN apt-get -y install python3
